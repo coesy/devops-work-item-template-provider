@@ -1,33 +1,26 @@
 const path = require("path");
 const fs = require("fs");
+// const webpack = require("webpack");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 module.exports = {
-    mode: "development",
+    mode: "production",
     target: "web",
     entry: {
         app: "./scripts/app.ts"
     },
     output: {
         filename: "scripts/[name].js",
-        publicPath: "https://localhost:9090/dist",
+        publicPath: "./dist",
         libraryTarget: "amd"
-    },
-
-    devServer: {
-        https: true,
-        port: 9090,
-        open: true
     },
     externals: [
         /^VSS\/.*/, /^TFS\/.*/, /^q$/
     ],
-    devtool: 'inline-source-map',
     resolve: {
         extensions: [".ts", ".tsx", ".js"],
         alias: {
-            "vss-web-extension-sdk": path.resolve(__dirname, "node_modules/vss-web-extension-sdk/lib/VSS.SDK"),
-            "chai": path.resolve(__dirname, "node_modules/chai/lib")            
+            "vss-web-extension-sdk": path.resolve(__dirname, "node_modules/vss-web-extension-sdk/lib/VSS.SDK")
         },
         modules: [path.resolve("."), "node_modules"]
     },

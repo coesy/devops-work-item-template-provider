@@ -1,0 +1,60 @@
+{
+    "manifestVersion": 1,
+    "id": "devops-work-item-template-provider",
+    "publisher": "CodeBoost",
+    "version": "0.0.11",
+    "name": "Devops work item template provider",
+    "description": "Inserts child tasks on a work item as according to templates",
+    "public": false,
+    "categories": ["Azure Boards"],
+    "targets": [
+        {
+            "id": "Microsoft.VisualStudio.Services"
+        }
+    ],
+    "scopes": [
+        "vso.work",
+        "vso.code_write",
+        "vso.build_execute"
+    ],
+    "content": {
+        "details": {
+            "path": "readme.md"
+        }
+    },
+    "repository": {
+        "type": "git",
+        "uri": "https://github.com/coesy/devops-work-item-template-provider"
+    },
+    "contributions": [
+        {
+            "id": "index",
+            "type": "ms.vss-work-web.work-item-form-control",
+            "targets": [
+                "ms.vss-work-web.work-item-form"
+            ],
+            "properties": {
+                "name": "Index",
+                "uri": "index.html",
+                "height": 600
+            }
+        }
+    ],
+    "files": [
+        {
+            "path": "dist/index.html",
+            "addressable": true,
+            "packagePath": "index.html"
+        },
+        {
+            "path": "dist/scripts/app.js",
+            "addressable": true,
+            "packagePath": "scripts/app.js"
+        },
+        {
+            "path": "node_modules/vss-web-extension-sdk/lib",
+            "addressable": true,
+            "packagePath": "dist"
+        }
+    ]
+}

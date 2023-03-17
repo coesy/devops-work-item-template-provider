@@ -1,27 +1,17 @@
 {
     "compilerOptions": {
-        "charset": "utf8",
-        "experimentalDecorators": true,
         "module": "amd",
-        "moduleResolution": "node",
-        "noImplicitAny": true,
-        "noImplicitThis": true,
-        "strict": true,
-        "target": "es5",
-        "rootDir": "src/",
-        "outDir": "dist/",
-        "jsx": "react",
-        "lib": [
-          "es5",
-          "es6",
-          "dom",
-          "es2015.promise"
-        ],
+        "sourceMap": true,
         "types": [
-            "react",
-            "jest",
-            "node"
+            "vss-web-extension-sdk",
+            "mocha",
+            "jquery",
+            "knockout",
+            "requirejs",
+            "chai"
         ],
-        "esModuleInterop": true
-    }
+    },
+    "exclude": [
+        "node_modules"
+    ]
 }
