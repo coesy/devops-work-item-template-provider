@@ -16,10 +16,9 @@
             usePlatformScripts: true
         });
 
-        VSS.require(["scripts/app"], function (app) {
+        VSS.require(["scripts/app", "VSS/Service", "TFS/WorkItemTracking/RestClient"], function (app, vssService, restClient) {
             VSS.notifyLoadSucceeded();
-            console.log('Hello world2');
-            debugger;
+            //VSS.resize(this.width, this.height);
         });
     </script>
 </head>

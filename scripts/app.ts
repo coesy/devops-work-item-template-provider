@@ -1,35 +1,95 @@
 /// <reference types="vss-web-extension-sdk" />
-import * as ExtensionContracts from "TFS/WorkItemTracking/ExtensionContracts";
-import { WorkItemFormService } from "TFS/WorkItemTracking/Services";
+import * as ExtensionContracts from 'TFS/WorkItemTracking/ExtensionContracts';
+import { WorkItemTrackingHttpClient } from 'TFS/WorkItemTracking/RestClient';
 
 var provider = () => {
-    debugger
     return {
         onLoaded: (workItemLoadedArgs: ExtensionContracts.IWorkItemLoadedArgs) => {
-            debugger;
-            var main = new Main(undefined, new StaticTemplateProvider());
-            main.LoadSelect('sel');
-            main.AssignButton('btn');
-        }//,
-//        onFieldChanged: (fieldChangedArgs: ExtensionContracts.IWorkItemFieldChangedArgs) => {
-//            //var changedValue = fieldChangedArgs.changedFields[control.getFieldName()];
-//            //if (changedValue !== undefined) {
-//            //    control.updateExternal(changedValue);
-//            //}
-//            debugger;
-//        }
+            VSS.require(["scripts/app", "VSS/Service", "TFS/WorkItemTracking/RestClient"], function (app, vssService, restClient) {
+                var witClient = vssService.getCollectionClient(restClient.WorkItemTrackingHttpClient);
+                var webContext = VSS.getWebContext();
+
+                var httpClient = new AzureHttpClient(
+                    webContext.account.id, // Organisation 'danieljeffries'
+                    webContext.project.id, // Project 'Azure Web Extensions'
+                    witClient
+                );
+        
+                var main = new Main(
+                    new StaticTemplateProvider(),
+                    httpClient,
+                    workItemLoadedArgs.id.toString());
+                main.LoadSelect('sel');
+                main.AssignButton('btn');
+            });
+        }
     }
 };
 
 VSS.register('index', provider);
 
+class AzureHttpClient {
+    constructor (
+        private organisation: string,
+        private project: string,
+        private workItemClient: WorkItemTrackingHttpClient) {
+
+    }
+
+    public async CreateTask(existingTaskId: string, templatePartModel: TemplatePartModel): Promise<string> {
+        // POST https://dev.azure.com/{organization}/{project}/_apis/wit/workitems/${type}?api-version=7.0
+        // https://learn.microsoft.com/en-us/rest/api/azure/devops/wit/work-items/create?view=azure-devops-rest-7.0&tabs=HTTP
+        
+        var parent = await this.workItemClient.getWorkItem(
+            Number.parseInt(existingTaskId), 
+            ["System.AreaPath", "System.IterationPath"]).then(workItem => {
+            return workItem;
+        });
+        var keyData: string = '';
+
+        await this.workItemClient.createWorkItem([
+            {
+              "op": "add",
+              "path": "/fields/System.Title",
+              "value": templatePartModel.Title
+            },
+            {
+                'op': 'add',
+                'path': '/fields/System.AreaPath',
+                'value': parent.fields["System.AreaPath"]
+            },
+            {
+                'op': 'add',
+                'path': '/fields/System.IterationPath',
+                'value': parent.fields["System.IterationPath"]
+            },
+            {
+                'op': 'add',
+                'path': '/relations/-',
+                'value': {
+                    'rel': 'System.LinkTypes.Hierarchy-Reverse',
+                    'url': parent.url
+                }
+            }
+          ], this.project, 'Task', false, false, false).then(workItem => {
+            debugger;
+            keyData = workItem.id.toString();
+        }, rejected => {
+            debugger;
+        });
+
+        return keyData;
+    }
+}
+
 class Main {
     private templates: TemplateModel[];
-    private select: HTMLSelectElement;
+    private select: any;
 
     public constructor(
-        private vssProvider: IVSSProvider,
-        private optionsProvider: IOptionsProvider) {
+        private optionsProvider: IOptionsProvider,
+        private azureHttpClient: AzureHttpClient,
+        private originalTaskNumber: string) {
 
     }
 
@@ -37,7 +97,7 @@ class Main {
         this.EnsureOptionsAreLoaded();
 
         var jqueryElement = $(`.${className}`);
-        this.select = jqueryElement[0] as HTMLSelectElement;
+        this.select = jqueryElement[0];
         this.templates.forEach(template => {
             jqueryElement.append($('<option>', { 
                 value: template.TemplateName,
@@ -48,10 +108,24 @@ class Main {
 
     public AssignButton(className: string) : void {
         var thisRef = this;
+        $(`.${className}`).off('click');
         $(`.${className}`).on('click', () => {
-            debugger;
-            alert(thisRef.templates[thisRef.select.selectedIndex].TemplateName);
+            var targetTemplate = thisRef.templates[thisRef.select.selectedIndex];
+            this.LoadChildren(thisRef, targetTemplate);
         });
+    }
+
+    private async LoadChildren(thisRef:Main, templateModel: TemplateModel) : Promise<number> {
+        var asyncTasks = templateModel.Children.filter(async task => {
+            var workItemNumber = task.WorkItemNumber;
+            if (!task.IsExisting) {
+                workItemNumber = await thisRef.azureHttpClient.CreateTask(thisRef.originalTaskNumber, task);
+            }
+            return 1;
+        });
+
+        await Promise.all(asyncTasks);
+        return 1;
     }
 
     private EnsureOptionsAreLoaded() {
@@ -59,10 +133,6 @@ class Main {
 
         this.templates = this.optionsProvider.GetTemplates();
     }
-}
-
-interface IVSSProvider {
-
 }
 
 interface IOptionsProvider {
@@ -90,7 +160,7 @@ class StaticTemplateProvider implements IOptionsProvider {
     GetTemplates(): TemplateModel[] {
         return [
             {
-                TemplateName: 'First Work Item',
+                TemplateName: 'Example Template',
                 Children: [
                     {
                         IsExisting: false,
