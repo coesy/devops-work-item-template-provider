@@ -42,3 +42,10 @@ devops-work-item-template-provider
 5. Immediately view the changes on a user story in the devops space
 
 # Useful Reading
+|Description|Link|
+|-|-|
+|General get started link|https://learn.microsoft.com/en-us/azure/devops/extend/get-started/node?view=azure-devops|
+|Custom control get started link|https://learn.microsoft.com/en-us/azure/devops/extend/develop/custom-control?view=azure-devops|
+|Sample repository|https://github.com/microsoft/vsts-extension-samples|
+|Possible extension points|https://learn.microsoft.com/en-us/azure/devops/extend/reference/targets/overview?view=azure-devops|
+|Link types when linking one task to another|https://learn.microsoft.com/en-us/azure/devops/boards/queries/link-type-reference?view=azure-devops|
