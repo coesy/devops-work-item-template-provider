@@ -27,5 +27,18 @@ devops-work-item-template-provider
 |tsconfig.json|The tsconfig.json file specifies the root files and the compiler options required to compile the project.||
 |vss-extension.json|Extension manifest file: Every extension has a JSON manifest file that defines basic information about the extension. The file also defines how it can extend and enhance the experience.|https://learn.microsoft.com/en-us/azure/devops/extend/develop/manifest?view=azure-devops|
 |webpack.config.js|Webpack configuration file, controls how the project is compilled.|https://webpack.js.org/guides/getting-started/|
+|webpack.prod.config.js|Webpack configuration file for a production build, controls how the project is compilled. Note this is currently not used.|https://webpack.js.org/guides/getting-started/|
 |images|Contains images copied to the output directory||
 |scripts|Contains TypeScript files, which if used by app.ts, are compiled on build.||
+
+# Developing Pre-Requisites
+1. Run `npm install` on initial clone 
+
+# Developing
+1. Run `npm run build:dev` to compile
+2. Run `npm run package:dev` to create a package which can be pushed to marketplace
+3. Run `npm run dev` to dev (but VSS does not work, visual inspection only)
+4. Push changes to the publisher connection: https://marketplace.visualstudio.com/manage/publishers/codeboost
+5. Immediately view the changes on a user story in the devops space
+
+# Useful Reading

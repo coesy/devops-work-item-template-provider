@@ -31,9 +31,7 @@ export class AzureHttpClient {
         
         var parent = await this.workItemClient.getWorkItem(
             Number.parseInt(existingTaskId), 
-            ["System.AreaPath", "System.IterationPath"]).then(workItem => {
-            return workItem;
-        });
+            ["System.AreaPath", "System.IterationPath"]);
         
         var newWorkItem = await this.workItemClient.createWorkItem([
             {
@@ -62,5 +60,22 @@ export class AzureHttpClient {
           ], this.project, 'Task', false, false, false);
 
         return newWorkItem.id.toString();
+    }
+
+    public async LinkExistingTask(existingTaskId: string, targetLinkTaskId: string) {
+        var target = await this.workItemClient.getWorkItem(
+            Number.parseInt(targetLinkTaskId), 
+            ["System.AreaPath", "System.IterationPath"]);
+
+        await this.workItemClient.updateWorkItem([
+            {
+                'op': 'add',
+                'path': '/relations/-',
+                'value': {
+                    'rel': 'System.LinkTypes.Hierarchy-Reverse',
+                    'url': target.url
+                }
+            }
+        ], Number.parseInt(existingTaskId), this.project, false, false, false);
     }
 }
