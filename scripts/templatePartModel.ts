@@ -11,7 +11,7 @@ export class TemplatePartModel {
     /**
      * If this task already exists, then this will contain the target work item number.
      */
-    public WorkItemNumber: string;
+    public WorkItemNumber: number;
     /**
      * Title of the work item to insert, if this is a new task.
      */

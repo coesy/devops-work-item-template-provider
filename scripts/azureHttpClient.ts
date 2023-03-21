@@ -25,12 +25,12 @@ export class AzureHttpClient {
      * @param templatePartModel - Template of the task to add.
      * @returns ID of the newly created task.
      */
-    public async CreateTask(existingTaskId: string, templatePartModel: TemplatePartModel): Promise<string> {
+    public async CreateTask(existingTaskId: number, templatePartModel: TemplatePartModel): Promise<string> {
         // POST https://dev.azure.com/{organization}/{project}/_apis/wit/workitems/${type}?api-version=7.0
         // https://learn.microsoft.com/en-us/rest/api/azure/devops/wit/work-items/create?view=azure-devops-rest-7.0&tabs=HTTP
         
         var parent = await this.workItemClient.getWorkItem(
-            Number.parseInt(existingTaskId), 
+            existingTaskId, 
             ["System.AreaPath", "System.IterationPath"]);
         
         var newWorkItem = await this.workItemClient.createWorkItem([
@@ -62,9 +62,9 @@ export class AzureHttpClient {
         return newWorkItem.id.toString();
     }
 
-    public async LinkExistingTask(existingTaskId: string, targetLinkTaskId: string) {
+    public async LinkExistingTask(existingTaskId: number, targetLinkTaskId: number) {
         var target = await this.workItemClient.getWorkItem(
-            Number.parseInt(targetLinkTaskId), 
+            targetLinkTaskId, 
             ["System.AreaPath", "System.IterationPath"]);
 
         await this.workItemClient.updateWorkItem([
@@ -72,10 +72,10 @@ export class AzureHttpClient {
                 'op': 'add',
                 'path': '/relations/-',
                 'value': {
-                    'rel': 'System.LinkTypes.Hierarchy-Reverse',
+                    'rel': 'System.LinkTypes.Related',
                     'url': target.url
                 }
             }
-        ], Number.parseInt(existingTaskId), this.project, false, false, false);
+        ], existingTaskId, this.project, false, false, false);
     }
 }

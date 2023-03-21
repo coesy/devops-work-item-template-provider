@@ -22,7 +22,7 @@ var embdeddedInWorkItemFormProvider = () => {
         
                 var templateLoadingProcessor = new TemplateLoadingProcessor(
                     httpClient,
-                    workItemLoadedArgs.id.toString());
+                    workItemLoadedArgs.id);
 
                 var uiBinder = new UIToTemplateLoadingProcessorBinder(
                     new StaticTemplateProvider(),
@@ -57,25 +57,25 @@ class StaticTemplateProvider implements IOptionsProvider {
                 Children: [
                     {
                         IsExisting: false,
-                        WorkItemNumber: '',
+                        WorkItemNumber: 0,
                         Title: 'Development',
                         Attributes: []
                     },
                     {
                         IsExisting: false,
-                        WorkItemNumber: '',
+                        WorkItemNumber: 0,
                         Title: 'Test',
                         Attributes: []
                     },
                     {
                         IsExisting: false,
-                        WorkItemNumber: '',
+                        WorkItemNumber: 0,
                         Title: 'Sign Off',
                         Attributes: []
                     },
                     {
                         IsExisting: true,
-                        WorkItemNumber: '1',
+                        WorkItemNumber: 1,
                         Title: 'First Work Item',
                         Attributes: []
                     }

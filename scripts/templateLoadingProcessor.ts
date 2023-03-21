@@ -12,7 +12,7 @@ export class TemplateLoadingProcessor {
      */
     constructor(
         private azureHttpClient: AzureHttpClient,
-        private originalTaskNumber: string) {
+        private originalTaskNumber: number) {
 
         }
 
@@ -22,10 +22,12 @@ export class TemplateLoadingProcessor {
      */
     public async LoadChildren(templateModel: TemplateModel) : Promise<any> {
         var asyncTasks = templateModel.Children.filter(async task => {
-            var workItemNumber = task.WorkItemNumber;
             if (!task.IsExisting) {
-                workItemNumber = await this.azureHttpClient.CreateTask(this.originalTaskNumber, task);
+                await this.azureHttpClient.CreateTask(this.originalTaskNumber, task);
+                return 1;
             }
+            
+            await this.azureHttpClient.LinkExistingTask(this.originalTaskNumber, task.WorkItemNumber);
             return 1;
         });
 
