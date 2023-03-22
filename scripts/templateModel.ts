@@ -6,10 +6,6 @@ import { TemplatePartModel } from "./templatePartModel";
 export class TemplateModel {
 
     /**
-     * The Id of the template, unique.
-     */
-    public TemplateId: number
-    /**
      * Name of the template, shown to the user.
      */
     public TemplateName: string;

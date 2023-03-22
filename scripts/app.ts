@@ -32,7 +32,7 @@ var embdeddedInWorkItemFormProvider = () => {
                     );
                 uiBinder.LoadSelect('sel');
                 uiBinder.AssignButton('btn');
-                uiBinder.AssignTestButton('btnTest');
+                uiBinder.AssignTestButton('btnAdd');
             });
         }
     }
@@ -56,7 +56,6 @@ class StaticTemplateProvider implements IOptionsProvider {
     GetTemplates(): TemplateModel[] {
         return [
             {
-                TemplateId: 1,
                 TemplateName: 'Example Template',
                 Children: [
                     {

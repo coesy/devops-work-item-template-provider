@@ -26,7 +26,8 @@ export class UIToTemplateLoadingProcessorBinder {
      */
     public LoadSelect(className: string) : void {
         this.EnsureOptionsAreLoaded();
-
+        debugger;
+        if (this.templates != null) {
         var jqueryElement = $(`.${className}`);
         this.select = jqueryElement[0];
         this.templates.forEach(template => {
@@ -35,6 +36,7 @@ export class UIToTemplateLoadingProcessorBinder {
                 text : template.TemplateName
             }));
         });
+    }
     }
 
     /**
@@ -55,10 +57,12 @@ export class UIToTemplateLoadingProcessorBinder {
      * @param className - Class name to use when using jquery to select any matching buttons.
      */
     public AssignTestButton(className: string) : void {
+        debugger;
         $(`.${className}`).off('click');
         $(`.${className}`).on('click', () => {
             this.templateLoadingProcessor.InsertTestRecord();
         });
+        this.LoadSelect('sel');
     }
 
     /**

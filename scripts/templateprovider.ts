@@ -8,17 +8,16 @@ import { IOptionsProvider } from "./iOptionsProvider";
  */
 export class TemplateProvider implements IOptionsProvider {
 
-    public async UpsertDocument(DocumentName: string, DocumentChildren: TemplatePartModel[], DocumentId?: number): Promise<any> {
+    public async CreateDocument(DocumentName: string, DocumentChildren: TemplatePartModel[], DocumentId?: number): Promise<any> {
         VSS.getService(VSS.ServiceIds.ExtensionData).then(function(dataService: Extension_Data.ExtensionDataService) {
             // Create Template Model
             var tm: TemplateModel = {
-                TemplateId: DocumentId,
                 TemplateName: DocumentName,
                 Children: DocumentChildren
             };
 
-            dataService.setDocument("TemplateCollection",tm).then(function() {
-                console.log("Did an Upsert on Id:" + DocumentId);
+            dataService.createDocument("TemplateCollection",tm).then(function(doc) {
+                console.log("Did an Insert with Id:" + doc.id);
             });
 
             return tm;
@@ -29,6 +28,7 @@ export class TemplateProvider implements IOptionsProvider {
         VSS.getService(VSS.ServiceIds.ExtensionData).then(function(dataService: Extension_Data.ExtensionDataService) {
             // Get all document under the collection
             dataService.getDocuments("TemplateCollection").then(function(docs) {
+                 console.log("There are " + docs.length + " in the collection.");
                  return docs;
             });
         });
