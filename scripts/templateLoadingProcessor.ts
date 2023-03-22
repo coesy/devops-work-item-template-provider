@@ -1,5 +1,8 @@
 import { AzureHttpClient } from "./azureHttpClient";
 import { TemplateModel } from "./templateModel";
+import { TemplatePartCustomAttributeModel } from "./templatePartCustomAttributeModel";
+import { TemplatePartModel } from "./templatePartModel";
+import { TemplateProvider } from "./templateprovider";
 
 /**
  * A processor used to load children from a given template.
@@ -8,10 +11,12 @@ export class TemplateLoadingProcessor {
     /**
      * Creates a new instance of TemplateLoadingProcessor.
      * @param azureHttpClient - Azure client used to interact with Azure APIs.
+     * @param templateProvider - The Provider for CRUD activities on Templates.
      * @param originalTaskNumber - Task number for the currently selected work item.
      */
     constructor(
         private azureHttpClient: AzureHttpClient,
+        private templateProvider: TemplateProvider,
         private originalTaskNumber: number) {
 
         }
@@ -32,5 +37,13 @@ export class TemplateLoadingProcessor {
         });
 
         return await Promise.all(asyncTasks);
+    }
+
+    public InsertTestRecord()
+    {
+        var templateChildren: TemplatePartModel[] = [ 
+            { Title: "Hello World", IsExisting: false, WorkItemNumber: 1, Attributes: null}
+        ];
+        this.templateProvider.UpsertDocument("Test Doc", templateChildren, null);
     }
 }

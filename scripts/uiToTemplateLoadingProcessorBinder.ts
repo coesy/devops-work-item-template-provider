@@ -51,6 +51,17 @@ export class UIToTemplateLoadingProcessorBinder {
     }
 
     /**
+     * Binds a given button to execute Inserting a TestRecord (on Processor) when clicked. This call must proceed LoadSelect.
+     * @param className - Class name to use when using jquery to select any matching buttons.
+     */
+    public AssignTestButton(className: string) : void {
+        $(`.${className}`).off('click');
+        $(`.${className}`).on('click', () => {
+            this.templateLoadingProcessor.InsertTestRecord();
+        });
+    }
+
+    /**
      * Ensures that this.templates are available.
      */
     private EnsureOptionsAreLoaded() {

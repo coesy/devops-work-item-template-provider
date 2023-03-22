@@ -4,6 +4,7 @@ import { AzureHttpClient } from './azureHttpClient';
 import { IOptionsProvider } from './iOptionsProvider';
 import { TemplateLoadingProcessor } from './templateLoadingProcessor';
 import { TemplateModel } from './templateModel';
+import { TemplateProvider } from './templateprovider';
 import { UIToTemplateLoadingProcessorBinder } from './uiToTemplateLoadingProcessorBinder';
 
 // Create a handler which handles the embedded work item field.
@@ -22,14 +23,16 @@ var embdeddedInWorkItemFormProvider = () => {
         
                 var templateLoadingProcessor = new TemplateLoadingProcessor(
                     httpClient,
+                    new TemplateProvider,
                     workItemLoadedArgs.id);
 
                 var uiBinder = new UIToTemplateLoadingProcessorBinder(
-                    new StaticTemplateProvider(),
+                    new TemplateProvider(),
                     templateLoadingProcessor
                     );
                 uiBinder.LoadSelect('sel');
                 uiBinder.AssignButton('btn');
+                uiBinder.AssignTestButton('btnTest');
             });
         }
     }
@@ -53,6 +56,7 @@ class StaticTemplateProvider implements IOptionsProvider {
     GetTemplates(): TemplateModel[] {
         return [
             {
+                TemplateId: 1,
                 TemplateName: 'Example Template',
                 Children: [
                     {
