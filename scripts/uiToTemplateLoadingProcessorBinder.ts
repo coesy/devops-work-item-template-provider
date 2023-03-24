@@ -26,7 +26,6 @@ export class UIToTemplateLoadingProcessorBinder {
      */
     public LoadSelect(className: string) : void {
         this.EnsureOptionsAreLoaded();
-        debugger;
         if (this.templates != null) {
         var jqueryElement = $(`.${className}`);
         this.select = jqueryElement[0];
@@ -57,7 +56,6 @@ export class UIToTemplateLoadingProcessorBinder {
      * @param className - Class name to use when using jquery to select any matching buttons.
      */
     public AssignTestButton(className: string) : void {
-        debugger;
         $(`.${className}`).off('click');
         $(`.${className}`).on('click', () => {
             this.templateLoadingProcessor.InsertTestRecord();
@@ -68,9 +66,9 @@ export class UIToTemplateLoadingProcessorBinder {
     /**
      * Ensures that this.templates are available.
      */
-    private EnsureOptionsAreLoaded() {
+    private async EnsureOptionsAreLoaded() {
         if (this.templates !== undefined) return;
 
-        this.templates = this.optionsProvider.GetTemplates();
+        this.templates = await this.optionsProvider.GetTemplates();
     }
 }

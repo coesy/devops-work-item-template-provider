@@ -44,6 +44,6 @@ export class TemplateLoadingProcessor {
         var templateChildren: TemplatePartModel[] = [ 
             { Title: "Hello World", IsExisting: false, WorkItemNumber: 1, Attributes: null}
         ];
-        await this.templateProvider.CreateDocument("Test Doc", templateChildren, null);
+        await this.templateProvider.CreateDocument("Test Doc", templateChildren);
     }
 }

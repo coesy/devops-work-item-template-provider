@@ -7,5 +7,5 @@ export interface IOptionsProvider {
     /**
      * Returns a set of templates currently configured.
      */
-    GetTemplates() : TemplateModel[];
+    GetTemplates() : Promise<TemplateModel[]>;
 }

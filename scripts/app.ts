@@ -1,6 +1,7 @@
 /// <reference types="vss-web-extension-sdk" />
 import * as ExtensionContracts from 'TFS/WorkItemTracking/ExtensionContracts';
 import { AzureHttpClient } from './azureHttpClient';
+import { CustomDialog } from './customDialog';
 import { IOptionsProvider } from './iOptionsProvider';
 import { TemplateLoadingProcessor } from './templateLoadingProcessor';
 import { TemplateModel } from './templateModel';
@@ -42,7 +43,8 @@ var embdeddedInWorkItemFormProvider = () => {
 var actionMenuProvider = () => {
     return {
         execute: function(actionContext) {
-            
+            debugger;
+            new CustomDialog().ShowDialog("Hello World");
         }
     };
 };
@@ -53,7 +55,7 @@ VSS.register('actionMenu', actionMenuProvider);
 
 // Static, temporary configuration to use in debugging/pre-configuration work.
 class StaticTemplateProvider implements IOptionsProvider {
-    GetTemplates(): TemplateModel[] {
+    async GetTemplates(): Promise<TemplateModel[]> {
         return [
             {
                 TemplateName: 'Example Template',

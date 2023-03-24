@@ -2,7 +2,7 @@
     "manifestVersion": 1,
     "id": "devops-work-item-template-provider",
     "publisher": "CodeBoost",
-    "version": "0.0.50",
+    "version": "0.0.52",
     "name": "Devops work item template provider",
     "description": "Inserts child tasks on a work item as according to templates",
     "public": false,
@@ -42,7 +42,7 @@
         {
             "id": "actionMenu",
             "type": "ms.vss-web.action",
-            "description":"Inserts child tasks on a work item as according to templates",
+            "description":"Inserts child tasks on a work item according to custom templates",
             "targets": [
                 "ms.vss-work-web.backlog-item-menu",
                 "ms.vss-work-web.backlog-board-card-item-menu",
@@ -50,10 +50,9 @@
                 "ms.vss-work-web.work-item-context-menu"
             ],
             "properties": {
-                "text": "Custom Work Item Template",
-                "title": "Custom Work Item Template",
+                "text": "Add WorkItem Child Items",
+                "title": "Add Child Items from a custom template",
                 "icon": "./images/computer-repair-icon.png",
-                "groupId": "actions",
                 "uri": "index.html"
             }
         }
@@ -63,6 +62,11 @@
             "path": "dist/index.html",
             "addressable": true,
             "packagePath": "index.html"
+        },
+        {
+            "path": "dist/popup.html",
+            "addressable": true,
+            "packagePath": "popup.html"
         },
         {
             "path": "dist/scripts/app.js",

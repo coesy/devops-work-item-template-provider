@@ -8,30 +8,26 @@ import { IOptionsProvider } from "./iOptionsProvider";
  */
 export class TemplateProvider implements IOptionsProvider {
 
-    public async CreateDocument(DocumentName: string, DocumentChildren: TemplatePartModel[], DocumentId?: number): Promise<any> {
-        VSS.getService(VSS.ServiceIds.ExtensionData).then(function(dataService: Extension_Data.ExtensionDataService) {
-            // Create Template Model
-            var tm: TemplateModel = {
-                TemplateName: DocumentName,
-                Children: DocumentChildren
-            };
+    public async CreateDocument(DocumentName: string, DocumentChildren: TemplatePartModel[]): Promise<any> {
+        var dataService: Extension_Data.ExtensionDataService = await VSS.getService(VSS.ServiceIds.ExtensionData);
+        // Create Template Model
+        var tm: TemplateModel = {
+            TemplateName: DocumentName,
+            Children: DocumentChildren
+        };
 
-            dataService.createDocument("TemplateCollection",tm).then(function(doc) {
-                console.log("Did an Insert with Id:" + doc.id);
-            });
-
-            return tm;
+        await dataService.createDocument("TemplateCollection",tm).then(function(doc) {
+            console.log("Did an Insert with Id:" + doc.id);
         });
+
+        return tm;
     }
 
-    public GetTemplates(): TemplateModel[] {
-        VSS.getService(VSS.ServiceIds.ExtensionData).then(function(dataService: Extension_Data.ExtensionDataService) {
-            // Get all document under the collection
-            dataService.getDocuments("TemplateCollection").then(function(docs) {
-                 console.log("There are " + docs.length + " in the collection.");
-                 return docs;
-            });
-        });
+    public async GetTemplates(): Promise<TemplateModel[]> {
+        var dataService: Extension_Data.ExtensionDataService = await VSS.getService(VSS.ServiceIds.ExtensionData);
+        // Get all document under the collection
+        debugger;
+        var docs = await dataService.getDocuments("TemplateCollection")
 
         return null;
     }
