@@ -12,7 +12,7 @@ import { UIToTemplateLoadingProcessorBinder } from './uiToTemplateLoadingProcess
 var embdeddedInWorkItemFormProvider = () => {
     return {
         onLoaded: (workItemLoadedArgs: ExtensionContracts.IWorkItemLoadedArgs) => {
-            VSS.require(["scripts/app", "VSS/Service", "TFS/WorkItemTracking/RestClient"], function (app, vssService, restClient) {
+            VSS.require(["scripts/app", "VSS/Service", "TFS/WorkItemTracking/RestClient"], async function (app, vssService, restClient) {
                 var witClient = vssService.getCollectionClient(restClient.WorkItemTrackingHttpClient);
                 var webContext = VSS.getWebContext();
 
@@ -31,7 +31,7 @@ var embdeddedInWorkItemFormProvider = () => {
                     new TemplateProvider(),
                     templateLoadingProcessor
                     );
-                uiBinder.LoadSelect('sel');
+                await uiBinder.LoadSelect('sel');
                 uiBinder.AssignButton('btn');
                 uiBinder.AssignTestButton('btnAdd');
             });

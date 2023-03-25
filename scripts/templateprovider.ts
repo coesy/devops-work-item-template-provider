@@ -2,6 +2,7 @@ import { TemplateModel } from "./templateModel";
 import { TemplatePartModel } from "./templatePartModel";
 import Extension_Data = require("VSS/SDK/Services/ExtensionData");
 import { IOptionsProvider } from "./iOptionsProvider";
+import { data } from "jquery";
 
 /**
  * A provider that allows the CRUD functionality of templates
@@ -25,10 +26,19 @@ export class TemplateProvider implements IOptionsProvider {
 
     public async GetTemplates(): Promise<TemplateModel[]> {
         var dataService: Extension_Data.ExtensionDataService = await VSS.getService(VSS.ServiceIds.ExtensionData);
-        // Get all document under the collection
-        debugger;
-        var docs = await dataService.getDocuments("TemplateCollection")
+        // Get all documents in the collection
+        
+        var docs: TemplateModel[]  = await dataService.getDocuments("TemplateCollection");
+       
+        return docs;
+    }
 
-        return null;
+    public async ClearTemplates() {
+        var dataService: Extension_Data.ExtensionDataService = await VSS.getService(VSS.ServiceIds.ExtensionData);
+        var docs: TemplateModel[]  = await dataService.getDocuments("TemplateCollection");
+        for (var i = 0; i < docs.length; i++) {
+            var id = docs[i]["id"];
+            await dataService.deleteDocument("TemplateCollection",id);
+          }
     }
 }

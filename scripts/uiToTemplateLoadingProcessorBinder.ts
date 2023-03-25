@@ -24,18 +24,19 @@ export class UIToTemplateLoadingProcessorBinder {
      * Loads a select box with options that can be used to choose from configured templates.
      * @param className - Class name to use when using jquery to select a single select box target. Will throw if there are zero targets.
      */
-    public LoadSelect(className: string) : void {
-        this.EnsureOptionsAreLoaded();
+    public async LoadSelect(className: string) {
+        await this.EnsureOptionsAreLoaded();
         if (this.templates != null) {
-        var jqueryElement = $(`.${className}`);
-        this.select = jqueryElement[0];
-        this.templates.forEach(template => {
-            jqueryElement.append($('<option>', { 
-                value: template.TemplateName,
-                text : template.TemplateName
-            }));
-        });
-    }
+            var jqueryElement = $(`.${className}`);
+            this.select = jqueryElement[0];
+            jqueryElement.empty();
+            this.templates.forEach(template => {
+                jqueryElement.append($('<option>', { 
+                    value: template.TemplateName,
+                    text : template.TemplateName
+                }));
+            });
+        }
     }
 
     /**

@@ -2,7 +2,7 @@
     "manifestVersion": 1,
     "id": "devops-work-item-template-provider",
     "publisher": "CodeBoost",
-    "version": "0.0.52",
+    "version": "0.0.58",
     "name": "Devops work item template provider",
     "description": "Inserts child tasks on a work item as according to templates",
     "public": false,
@@ -62,11 +62,6 @@
             "path": "dist/index.html",
             "addressable": true,
             "packagePath": "index.html"
-        },
-        {
-            "path": "dist/popup.html",
-            "addressable": true,
-            "packagePath": "popup.html"
         },
         {
             "path": "dist/scripts/app.js",
