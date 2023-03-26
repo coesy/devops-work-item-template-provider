@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="sdk/scripts/VSS.SDK.js"></script>
+    </head>
+    <body>
+        <h2 id="header">New Template</h2>
+        <p>
+            <label>Name:</label>
+            <input id="TemplateName" />
+        </p>
+        <p>
+            <label>Children:</label>
+        </p>
+        <p>
+            <input type="radio" id="new" name="childType" value="New">
+            <label for="new">New</label><br>
+            <input type="radio" id="existing" name="childType" value="Existing">
+            <label for="existing">Existing</label><br>
+        </p>
+        <script>
+            VSS.init({
+                explicitNotifyLoaded: true,
+                usePlatformScripts: true
+            });
+
+            VSS.require(["scripts/app", "VSS/Service", "TFS/WorkItemTracking/RestClient"], function (app, vssService, restClient) {
+            VSS.notifyLoadSucceeded();
+
+            });
+
+            var createTemplateForm = (function() {
+                var callbacks = [];
+                
+                function inputChanged() {
+                    // Execute registered callbacks
+                    for(var i = 0; i < callbacks.length; i++) {
+                        callbacks[i](isValid());
+                    }
+                }
+                
+                function isValid() {
+                    // Check whether form is valid or not
+                    return !!(name.value);
+                }
+                
+                function getFormData() {
+                    // Get form values
+                    return {
+                        name: name.value,
+                        isExisting: isExisting.value,
+                        email: email.value  
+                    };
+                }
+
+                var name = document.getElementById("templateName");
+                var isExisting = document.getElementById("existing");
+                
+                name.addEventListener("change", inputChanged);
+                isExisting.addEventListener("childType", inputChanged);
+                                
+                return {
+                    isFormValid: function() {
+                        return isValid();   
+                    },
+                    getFormData: function() {
+                        return getFormData();
+                    },
+                    attachFormChanged: function(cb) {
+                         callbacks.push(cb);
+                    }
+                };
+            })();
+            
+            // Register form object to be used across this extension
+            VSS.register("create-template-form", createTemplateForm);
+        </script>
+    </body>
+</html>

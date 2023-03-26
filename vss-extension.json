@@ -2,7 +2,7 @@
     "manifestVersion": 1,
     "id": "devops-work-item-template-provider",
     "publisher": "CodeBoost",
-    "version": "0.0.58",
+    "version": "0.0.68",
     "name": "Devops work item template provider",
     "description": "Inserts child tasks on a work item as according to templates",
     "public": false,
@@ -55,6 +55,15 @@
                 "icon": "./images/computer-repair-icon.png",
                 "uri": "index.html"
             }
+        },
+        {
+            "id": "create-template-form",
+            "type": "ms.vss-web.control",
+            "description": "The content to be displayed in a dialog",
+            "targets": [],
+            "properties": {
+                "uri": "create-template-form.html"
+            }
         }
     ],
     "files": [
@@ -62,6 +71,11 @@
             "path": "dist/index.html",
             "addressable": true,
             "packagePath": "index.html"
+        },
+        {
+            "path": "dist/create-template-form.html",
+            "addressable": true,
+            "packagePath": "create-template-form.html"
         },
         {
             "path": "dist/scripts/app.js",
