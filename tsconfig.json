@@ -10,6 +10,8 @@
             "requirejs",
             "chai"
         ],
+        "target": "es5",
+        "lib": ["es5","es2015", "DOM"]
     },
     "exclude": [
         "node_modules"

@@ -1,118 +1,86 @@
 /// <reference types="vss-web-extension-sdk" />
-import * as ExtensionContracts from "TFS/WorkItemTracking/ExtensionContracts";
-import { WorkItemFormService } from "TFS/WorkItemTracking/Services";
+import * as ExtensionContracts from 'TFS/WorkItemTracking/ExtensionContracts';
+import { AzureHttpClient } from './azureHttpClient';
+import { CustomDialog } from './customDialog';
+import { IOptionsProvider } from './iOptionsProvider';
+import { TemplateLoadingProcessor } from './templateLoadingProcessor';
+import { TemplateModel } from './templateModel';
+import { TemplateProvider } from './templateprovider';
+import { UIToTemplateLoadingProcessorBinder } from './uiToTemplateLoadingProcessorBinder';
 
-var provider = () => {
-    debugger
+// Create a handler which handles the embedded work item field.
+var embdeddedInWorkItemFormProvider = () => {
     return {
         onLoaded: (workItemLoadedArgs: ExtensionContracts.IWorkItemLoadedArgs) => {
-            debugger;
-            var main = new Main(undefined, new StaticTemplateProvider());
-            main.LoadSelect('sel');
-            main.AssignButton('btn');
-        }//,
-//        onFieldChanged: (fieldChangedArgs: ExtensionContracts.IWorkItemFieldChangedArgs) => {
-//            //var changedValue = fieldChangedArgs.changedFields[control.getFieldName()];
-//            //if (changedValue !== undefined) {
-//            //    control.updateExternal(changedValue);
-//            //}
-//            debugger;
-//        }
+            VSS.require(["scripts/app", "VSS/Service", "TFS/WorkItemTracking/RestClient"], async function (app, vssService, restClient) {
+                var witClient = vssService.getCollectionClient(restClient.WorkItemTrackingHttpClient);
+                var webContext = VSS.getWebContext();
+
+                var httpClient = new AzureHttpClient(
+                    webContext.account.id, // Organisation 'danieljeffries'
+                    webContext.project.id, // Project 'Azure Web Extensions'
+                    witClient
+                );
+        
+                var templateLoadingProcessor = new TemplateLoadingProcessor(
+                    httpClient,
+                    new TemplateProvider,
+                    workItemLoadedArgs.id);
+
+                var uiBinder = new UIToTemplateLoadingProcessorBinder(
+                    new TemplateProvider(),
+                    templateLoadingProcessor
+                    );
+                await uiBinder.LoadSelect('sel');
+                uiBinder.AssignButton('btn');
+                uiBinder.AssignTestButton('btnAdd');
+            });
+        }
     }
 };
 
-VSS.register('index', provider);
-
-class Main {
-    private templates: TemplateModel[];
-    private select: HTMLSelectElement;
-
-    public constructor(
-        private vssProvider: IVSSProvider,
-        private optionsProvider: IOptionsProvider) {
-
-    }
-
-    public LoadSelect(className: string) : void {
-        this.EnsureOptionsAreLoaded();
-
-        var jqueryElement = $(`.${className}`);
-        this.select = jqueryElement[0] as HTMLSelectElement;
-        this.templates.forEach(template => {
-            jqueryElement.append($('<option>', { 
-                value: template.TemplateName,
-                text : template.TemplateName
-            }));
-        });
-    }
-
-    public AssignButton(className: string) : void {
-        var thisRef = this;
-        $(`.${className}`).on('click', () => {
+// Create a handler which handles the menu items.
+var actionMenuProvider = () => {
+    return {
+        execute: function(actionContext) {
             debugger;
-            alert(thisRef.templates[thisRef.select.selectedIndex].TemplateName);
-        });
-    }
+            new CustomDialog().ShowDialog("Hello World");
+        }
+    };
+};
 
-    private EnsureOptionsAreLoaded() {
-        if (this.templates !== undefined) return;
+// Register the handlers. These refer, and must match, the contributor IDs in vss-extensoin.json.
+VSS.register('embdeddedInWorkItemForm', embdeddedInWorkItemFormProvider);
+VSS.register('actionMenu', actionMenuProvider);
 
-        this.templates = this.optionsProvider.GetTemplates();
-    }
-}
-
-interface IVSSProvider {
-
-}
-
-interface IOptionsProvider {
-    GetTemplates() : TemplateModel[];
-}
-
-class TemplateModel {
-    public TemplateName: string;
-    public Children: TemplatePartModel[];
-}
-
-class TemplatePartModel {
-    public IsExisting: boolean;
-    public WorkItemNumber: string;
-    public Title: string;
-    public Attributes: TemplatePartCustomAttributeModel[];
-}
-
-class TemplatePartCustomAttributeModel {
-    public Key: string;
-    public Value: string;
-}
-
+// Static, temporary configuration to use in debugging/pre-configuration work.
 class StaticTemplateProvider implements IOptionsProvider {
-    GetTemplates(): TemplateModel[] {
+    async GetTemplates(): Promise<TemplateModel[]> {
         return [
             {
-                TemplateName: 'First Work Item',
+                TemplateName: 'Example Template',
                 Children: [
                     {
                         IsExisting: false,
-                        WorkItemNumber: '',
+                        WorkItemNumber: 0,
                         Title: 'Development',
                         Attributes: []
                     },
                     {
                         IsExisting: false,
-                        WorkItemNumber: '',
+                        WorkItemNumber: 0,
                         Title: 'Test',
                         Attributes: []
                     },
                     {
                         IsExisting: false,
-                        WorkItemNumber: '',
+                        WorkItemNumber: 0,
                         Title: 'Sign Off',
                         Attributes: []
                     },
                     {
                         IsExisting: true,
-                        WorkItemNumber: '1',
+                        WorkItemNumber: 1,
                         Title: 'First Work Item',
                         Attributes: []
                     }

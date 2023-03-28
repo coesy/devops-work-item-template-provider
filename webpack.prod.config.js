@@ -27,7 +27,7 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.tsx?$/,
+                test: /\.ts?$/,
                 use: "ts-loader"
             },
             {
@@ -49,7 +49,8 @@ module.exports = {
                 //{ from: "**/*", to: "./img", context: "img" },
                 //{ from: "**/*", to: "./images", context: "images" },
                 { from: "./vss-extension.json", to: "vss-extension.json" },
-                { from: "./readme.md", to: "readme.md" }
+                { from: "./readme.md", to: "readme.md" },
+                { from: './images/*', to: './images/' }
             ]
         })
     ]
