@@ -1,8 +1,8 @@
-import { AzureHttpClient } from "./azureHttpClient";
-import { TemplateModel } from "./templateModel";
-import { TemplatePartCustomAttributeModel } from "./templatePartCustomAttributeModel";
-import { TemplatePartModel } from "./templatePartModel";
-import { TemplateProvider } from "./templateprovider";
+import { AzureHttpClient } from './azureHttpClient';
+import { TemplateModel } from './templateModel';
+import { TemplatePartCustomAttributeModel } from './templatePartCustomAttributeModel';
+import { TemplatePartModel } from './templatePartModel';
+import { TemplateProvider } from './templateprovider';
 
 /**
  * A processor used to load children from a given template.
@@ -42,8 +42,8 @@ export class TemplateLoadingProcessor {
     public async InsertTestRecord()
     {
         var templateChildren: TemplatePartModel[] = [ 
-            { Title: "Hello World", IsExisting: false, WorkItemNumber: 1, Attributes: null}
+            { Title: 'Hello World', IsExisting: false, WorkItemNumber: 1, Attributes: []}
         ];
-        await this.templateProvider.CreateDocument("Test Doc", templateChildren);
+        await this.templateProvider.CreateDocument('Test Doc', templateChildren);
     }
 }

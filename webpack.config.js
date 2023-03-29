@@ -2,16 +2,24 @@ const path = require("path");
 const fs = require("fs");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 
+// Webpack entry points. Mapping from resulting bundle name to the source file entry.
+const entries = {};
+
+// Loop through subfolders in the "Samples" folder and add an entry for each one
+const samplesDir = path.join(__dirname, "src/modules");
+fs.readdirSync(samplesDir).filter(dir => {
+    if (fs.statSync(path.join(samplesDir, dir)).isDirectory()) {
+        entries[dir] = "./" + path.relative(process.cwd(), path.join(samplesDir, dir, dir));
+    }
+});
+
 module.exports = {
     mode: "development",
-    target: "web",
-    entry: {
-        app: "./scripts/app.ts"
-    },
+    //target: "web",
+    entry: entries,
     output: {
         filename: "scripts/[name].js",
-        publicPath: "https://localhost:9090/dist",
-        libraryTarget: "amd"
+        publicPath: "https://localhost:9090/dist"
     },
 
     devServer: {
@@ -19,46 +27,48 @@ module.exports = {
         port: 9090,
         open: true
     },
-    externals: [
-        /^VSS\/.*/, /^TFS\/.*/, /^q$/
-    ],
-    devtool: 'inline-source-map',
     resolve: {
         extensions: [".ts", ".tsx", ".js"],
         alias: {
-            "vss-web-extension-sdk": path.resolve(__dirname, "node_modules/vss-web-extension-sdk/lib/VSS.SDK"),
-            "chai": path.resolve(__dirname, "node_modules/chai/lib")            
+            "azure-devops-extension-sdk": path.resolve("node_modules/azure-devops-extension-sdk"),
+            "../../shared": path.resolve("src/shared")
         },
-        modules: [path.resolve("."), "node_modules"]
+    },
+    stats: {
+        warnings: false
     },
     module: {
         rules: [
             {
-                test: /\.ts?$/,
-                use: "ts-loader"
+                test: /\.tsx?$/,
+                loader: "ts-loader"
+            },
+            {
+                test: /\.scss$/,
+                use: ["style-loader", "css-loader", "azure-devops-ui/buildScripts/css-variables-loader", "sass-loader"]
             },
             {
                 test: /\.css$/,
-                use: ["style-loader", "css-loader"]
+                use: ["style-loader", "css-loader"],
             },
             {
-                test: /\.(png|svg|jpg|gif|html)$/,
-                use: "file-loader"
+                test: /\.woff$/,
+                use: [{
+                    loader: 'base64-inline-loader'
+                }]
+            },
+            {
+                test: /\.html$/,
+                loader: "file-loader"
             }
         ]
     },
     plugins: [
         new CopyWebpackPlugin({
-            patterns: [
-                { from: "./node_modules/vss-web-extension-sdk/lib/VSS.SDK.min.js", to: "./dist/VSS.SDK.min.js" },
-                //{ from: "**/*.css", to: "./styles", context: "styles" },
-                { from: "*.html", to: "./", context: "." },
-                //{ from: "**/*", to: "./img", context: "img" },
-                //{ from: "**/*", to: "./images", context: "images" },
-                { from: "./vss-extension.json", to: "vss-extension.json" },
-                { from: "./readme.md", to: "readme.md" },
-                { from: './images/*', to: './images/' }
-            ]
+           patterns: [ 
+               { from: "**/*.html", context: "src/modules" },
+               { from: 'computer-repair-icon.png', to: 'computer-repair-icon.png'}
+           ]
         })
     ]
 };

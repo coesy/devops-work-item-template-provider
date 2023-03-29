@@ -1,4 +1,4 @@
-import { TemplateModel } from "./templateModel";
+import { TemplateModel } from './templateModel';
 
 /**
  * Defines a base class for configuration used by this app.

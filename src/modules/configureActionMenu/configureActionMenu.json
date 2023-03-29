@@ -1,0 +1,21 @@
+{
+    "contributions": [
+        {
+            "id": "configureActionMenu",
+            "type": "ms.vss-web.action",
+            "description":"Inserts child tasks on a work item according to custom templates",
+            "targets": [
+                "ms.vss-work-web.backlog-item-menu",
+                "ms.vss-work-web.backlog-board-card-item-menu",
+                "ms.vss-work-web.work-item-toolbar-menu", 
+                "ms.vss-work-web.work-item-context-menu"
+            ],
+            "properties": {
+                "text": "CodeBoost - Configuration",
+                "title": "Add Child Items from a custom template",
+                "icon": "computer-repair-icon.png",
+                "uri": "dist/configureActionMenu/configureActionMenu.html"
+            }
+        }
+    ]
+}

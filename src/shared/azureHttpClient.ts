@@ -1,5 +1,5 @@
-import { WorkItemTrackingHttpClient } from "TFS/WorkItemTracking/RestClient";
-import { TemplatePartModel } from "./templatePartModel";
+import { WorkItemTrackingRestClient } from 'azure-devops-extension-api/WorkItemTracking/WorkItemTrackingClient';
+import { TemplatePartModel } from './templatePartModel';
 
 /**
  * A client to be used when communicating with Azure REST APIs.
@@ -15,7 +15,7 @@ export class AzureHttpClient {
     constructor (
         private organisation: string,
         private project: string,
-        private workItemClient: WorkItemTrackingHttpClient) {
+        private workItemClient: WorkItemTrackingRestClient) {
 
     }
 
@@ -30,24 +30,25 @@ export class AzureHttpClient {
         // https://learn.microsoft.com/en-us/rest/api/azure/devops/wit/work-items/create?view=azure-devops-rest-7.0&tabs=HTTP
         
         var parent = await this.workItemClient.getWorkItem(
-            existingTaskId, 
-            ["System.AreaPath", "System.IterationPath"]);
+            existingTaskId,
+            this.project, 
+            ['System.AreaPath', 'System.IterationPath']);
         
         var newWorkItem = await this.workItemClient.createWorkItem([
             {
-              "op": "add",
-              "path": "/fields/System.Title",
-              "value": templatePartModel.Title
+              'op': 'add',
+              'path': '/fields/System.Title',
+              'value': templatePartModel.Title
             },
             {
                 'op': 'add',
                 'path': '/fields/System.AreaPath',
-                'value': parent.fields["System.AreaPath"]
+                'value': parent.fields['System.AreaPath']
             },
             {
                 'op': 'add',
                 'path': '/fields/System.IterationPath',
-                'value': parent.fields["System.IterationPath"]
+                'value': parent.fields['System.IterationPath']
             },
             {
                 'op': 'add',
@@ -65,7 +66,8 @@ export class AzureHttpClient {
     public async LinkExistingTask(existingTaskId: number, targetLinkTaskId: number) {
         var target = await this.workItemClient.getWorkItem(
             targetLinkTaskId, 
-            ["System.AreaPath", "System.IterationPath"]);
+            this.project,
+            ['System.AreaPath', 'System.IterationPath']);
 
         await this.workItemClient.updateWorkItem([
             {

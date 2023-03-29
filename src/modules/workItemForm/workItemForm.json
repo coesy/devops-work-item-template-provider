@@ -1,0 +1,16 @@
+{
+    "contributions": [
+        {
+            "id": "embdeddedInWorkItemForm",
+            "type": "ms.vss-work-web.work-item-form-control",
+            "targets": [
+                "ms.vss-work-web.work-item-form"
+            ],
+            "properties": {
+                "name": "Work Item Template Provider",
+                "uri": "dist/workItemForm/workItemForm.html",
+                "height": 600
+            }
+        }
+    ]
+}

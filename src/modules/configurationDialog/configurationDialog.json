@@ -1,0 +1,13 @@
+{
+    "contributions": [
+        {
+            "id": "configurationDialog",
+            "type": "ms.vss-web.external-content",
+            "description": "The content to be displayed in a dialog",
+            "targets": [],
+            "properties": {
+                "uri": "dist/configurationDialog/configurationDialog.html"
+            }
+        }
+    ]
+}

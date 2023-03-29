@@ -1,0 +1,38 @@
+{
+    "manifestVersion": 1,
+    "id": "devops-work-item-template-provider",
+    "publisher": "CodeBoost",
+    "version": "0.0.87",
+    "name": "CodeBoost.TemplateProvider",
+    "description": "Inserts child tasks on a work item as according to templates",
+    "public": false,
+    "categories": ["Azure Boards"],
+    "targets": [
+        {
+            "id": "Microsoft.VisualStudio.Services"
+        }
+    ],
+    "scopes": [
+        "vso.work_full",
+        "vso.code_write",
+        "vso.build_execute"
+    ],
+    "icons": {
+        "default": "dist/computer-repair-icon.png"
+    },
+    "content": {
+        "details": {
+            "path": "readme.md"
+        }
+    },
+    "repository": {
+        "type": "git",
+        "uri": "https://github.com/coesy/devops-work-item-template-provider"
+    },
+    "files": [
+        {
+            "path": "dist",
+            "addressable": true
+        }
+    ]
+}

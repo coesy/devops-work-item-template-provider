@@ -6,7 +6,7 @@ import { TemplateLoadingProcessor } from './templateLoadingProcessor';
  * A class which can be used to bind a UI to template loading processes.
  */
 export class UIToTemplateLoadingProcessorBinder {
-    private templates: TemplateModel[];
+    private templates: TemplateModel[] = [];
     private select: any;
 
     /**
@@ -26,6 +26,7 @@ export class UIToTemplateLoadingProcessorBinder {
      */
     public async LoadSelect(className: string) {
         await this.EnsureOptionsAreLoaded();
+        
         if (this.templates != null) {
             var jqueryElement = $(`.${className}`);
             this.select = jqueryElement[0];
@@ -57,9 +58,10 @@ export class UIToTemplateLoadingProcessorBinder {
      * @param className - Class name to use when using jquery to select any matching buttons.
      */
     public AssignTestButton(className: string) : void {
+        var thisRef = this;
         $(`.${className}`).off('click');
         $(`.${className}`).on('click', () => {
-            this.templateLoadingProcessor.InsertTestRecord();
+            thisRef.templateLoadingProcessor.InsertTestRecord();
         });
         this.LoadSelect('sel');
     }
@@ -68,8 +70,13 @@ export class UIToTemplateLoadingProcessorBinder {
      * Ensures that this.templates are available.
      */
     private async EnsureOptionsAreLoaded() {
-        if (this.templates !== undefined) return;
+        if (this.templates.length > 0) return;
 
-        this.templates = await this.optionsProvider.GetTemplates();
+        try {
+            this.templates = await this.optionsProvider.GetTemplates();
+        }
+        catch (exception: any) {
+            return;
+        }
     }
 }
