@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     </head>
     <body>
         <script type="text/javascript" src="../scripts/configurationDialog.js" charset="utf-8"></script>
-
+<!--
         <h2 id="header">New Template</h2>
         <p>
             <label>Name:</label>
@@ -19,6 +21,85 @@
             <label for="new">New</label><br>
             <input type="radio" id="existing" name="childType" value="Existing">
             <label for="existing">Existing</label><br>
-        </p>
+        </p>-->
+
+        <div class="container">
+            <div class="row text-center">
+                <h1>New Template</h1>
+            </div>
+            <div class="row">
+                <h2>Template Details</h2>
+            </div>
+            <div class="row">
+                <div class="col-sm-2">
+                    <label for="nameInput">Name</label>
+                </div>
+                <div class="col-sm-4">
+                    <input type="text" class="nameInput form-control" placeholder="Choose a new name for this template" /> 
+                </div>
+            </div>
+            <div class="row">
+                <h2>Template Children</h2>
+            </div>
+            <div class="row">
+                <div class="col-sm-11"></div>
+                <div class="col-sm-1">
+                    <input type="button" class="btn" value="+" />
+                </div>
+            </div>
+
+            <div style="height:1px;margin:25px;background-color:gray;margin-left:50px;margin-right:50px;width:100%;"></div>
+
+            <div class="row">
+                <div class="col-sm-2">
+                    <label>Existing Work Item ID</label>
+                </div>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" placeholder="Enter an existing work item ID" />
+                </div>
+            </div>
+            
+            <div class="row float-middle">
+                <div class="col-sm-2">
+                    <label>Link to existing work item</label>
+                </div>
+                <div class="col-sm-4">
+                    <input type="checkbox" value="true" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="row-sm-1">
+                    <input type="button" class="btn btn-danger" value="Delete Child" />
+                </div>
+            </div>
+
+            <div style="height:1px;margin:25px;background-color:gray;margin-left:50px;margin-right:50px;width:100%;"></div>
+
+            <div class="row">
+                <div class="col-sm-2">
+                    <label>New Child Title</label>
+                </div>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" placeholder="Enter a title for the child task" />
+                </div>
+            </div>
+            
+            <div class="row float-middle">
+                <div class="col-sm-2">
+                    <label>Link to existing work item</label>
+                </div>
+                <div class="col-sm-4">
+                    <input type="checkbox" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="row-sm-1">
+                    <input type="button" class="btn btn-danger" value="Delete Child" />
+                </div>
+            </div>
+
+        </div>
     </body>
 </html>

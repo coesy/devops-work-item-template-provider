@@ -1,4 +1,4 @@
-import { IHostPageLayoutService } from 'azure-devops-extension-api';
+import { IDialogOptions, IHostPageLayoutService } from 'azure-devops-extension-api';
 import * as SDK from 'azure-devops-extension-sdk/SDK';
 
 /**

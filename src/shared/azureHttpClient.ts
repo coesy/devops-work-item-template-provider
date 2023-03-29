@@ -63,6 +63,11 @@ export class AzureHttpClient {
         return newWorkItem.id.toString();
     }
 
+    /**
+     * Creates a related to link between two work items.
+     * @param existingTaskId - First of the items to link.
+     * @param targetLinkTaskId - Second of the items to link.
+     */
     public async LinkExistingTask(existingTaskId: number, targetLinkTaskId: number) {
         var target = await this.workItemClient.getWorkItem(
             targetLinkTaskId, 
