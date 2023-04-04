@@ -8,8 +8,7 @@
             ],
             "properties": {
                 "name": "Work Item Template Provider",
-                "uri": "dist/workItemForm/workItemForm.html",
-                "height": 600
+                "uri": "dist/workItemForm/workItemForm.html"
             }
         }
     ]
