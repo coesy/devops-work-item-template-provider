@@ -1,0 +1,20 @@
+@import "../../../node_modules/azure-devops-ui/Core/platformCommon";
+
+.topLevelMenuButton {
+    width:100%;
+    margin:0px;
+    padding:0px;
+    height:100%;
+} 
+
+.active {
+    font-weight: bold;
+}
+
+.topLevelContainer {
+    padding: 0px !important; 
+}
+
+.topLevelMenuContainer {
+    border-right: solid 1px gray;
+}

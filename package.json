@@ -51,6 +51,7 @@
     "jest": "^29.5.0",
     "npm": "^8.19.4",
     "react": "^16.13.1",
+    "react-bootstrap": "^2.7.2",
     "react-dom": "^16.13.1",
     "tfs": "^1.6.0",
     "typescript": "^5.0.2"
