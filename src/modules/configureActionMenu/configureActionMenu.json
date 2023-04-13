@@ -12,7 +12,7 @@
             ],
             "properties": {
                 "text": "CodeBoost - Configuration",
-                "title": "Add Child Items from a custom template",
+                "title": "Configure CodeBoost",
                 "icon": "computer-repair-icon.png",
                 "uri": "dist/configureActionMenu/configureActionMenu.html"
             }

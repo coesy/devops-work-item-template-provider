@@ -39,6 +39,14 @@ devops-work-item-template-provider
 4. Push changes to the publisher connection: https://marketplace.visualstudio.com/manage/publishers/codeboost
 5. Immediately view the changes on a user story in the devops space
 
+# Components
+|Path|Description|
+|-|-|
+|configurationDialog|Dialog presented, containing configuration editing UI, when selected from an action menu|
+|configureActionMenu|An action menu item which loads `configurationDialog` when selected|
+|templateActionMenu|An action menu item which loads a template selection dialog, allowing a user to select which template to insert on the current work item|
+|workItemForm|Embedded work item template selector UI|
+
 # Useful Reading
 |Description|Link|
 |-|-|
