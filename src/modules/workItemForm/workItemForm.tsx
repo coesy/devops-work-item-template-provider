@@ -6,7 +6,7 @@ import { IWorkItemLoadedArgs } from 'azure-devops-extension-api/WorkItemTracking
 import { AzureHttpClient } from '../../shared/azureHttpClient';
 import { TemplateLoadingProcessor } from '../../shared/templateLoadingProcessor';
 import { TemplateProvider } from '../../shared/templateprovider';
-import { CommonServiceIds, getClient, IProjectPageService } from 'azure-devops-extension-api/index';
+import { CommonServiceIds, getClient, IExtensionDataService, IProjectPageService } from 'azure-devops-extension-api/index';
 import { WorkItemTrackingRestClient } from 'azure-devops-extension-api/WorkItemTracking/WorkItemTrackingClient';
 import React from "react";
 import * as ReactDOM from 'react-dom';
@@ -25,8 +25,14 @@ var embdeddedInWorkItemFormProvider = () => {
                 project!.id, // Project 'Azure Web Extensions'
                 client
             );
+
+            var dataService = await SDK.getService<IExtensionDataService>(CommonServiceIds.ExtensionDataService);
+            var dataManager = await dataService.getExtensionDataManager(
+                'CodeBoost.devops-work-item-template-provider',
+                await SDK.getAccessToken()
+            );
     
-            var templateProvider = new TemplateProvider();
+            var templateProvider = new TemplateProvider(dataManager);
 
             var templateLoadingProcessor = new TemplateLoadingProcessor(
                 httpClient,
@@ -43,7 +49,7 @@ var embdeddedInWorkItemFormProvider = () => {
                 document.getElementById("root"));
 
             await SDK.notifyLoadSucceeded();
-            SDK.resize();
+            SDK.resize(140, 260);
         }
     }
 };

@@ -58,3 +58,4 @@ devops-work-item-template-provider
 |Newer Azure SDK|https://github.com/Microsoft/azure-devops-extension-sdk|
 |Newer Azure SDK documentation|https://developer.microsoft.com/en-us/azure-devops/|
 |Newer Azure Sample|https://github.com/microsoft/azure-devops-extension-sample|
+|Hub/Dialog example|https://github.com/Microsoft/azure-devops-extension-sample/blob/HEAD/src/Samples/Hub/Hub.tsx|

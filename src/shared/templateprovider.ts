@@ -9,46 +9,37 @@ import { CommonServiceIds, IExtensionDataManager, IExtensionDataService } from '
  * A provider that allows the CRUD functionality of templates
  */
 export class TemplateProvider implements IOptionsProvider {
+    constructor(private extensionDataManager: IExtensionDataManager) {
+        this.CreateDocument = this.CreateDocument.bind(this);
+        this.GetTemplates = this.GetTemplates.bind(this);
+        this.ClearTemplates = this.ClearTemplates.bind(this);
+    }
 
-    public async CreateDocument(DocumentName: string, DocumentChildren: TemplatePartModel[]): Promise<any> {
-        // Create Template Model
-        var templateModel: TemplateModel = {
-            TemplateName: DocumentName,
-            Children: DocumentChildren
-        };
+    public async CreateDocument(templateModel: TemplateModel): Promise<TemplateModel> {
+        if (templateModel.id !== undefined)
+            throw new Error('Unable to create a model with an ID');
 
-        var extensionDataManager = await this.GetExtensionDataClient();
-        extensionDataManager.createDocument('TemplateCollection', templateModel).then(function(doc) {
-            console.log('Did an Insert with Id:' + doc.id);
-        });
-
+        var itemReturned = await this.extensionDataManager.createDocument('TemplateCollection', templateModel);
+debugger;
         return templateModel;
     }
 
     public async GetTemplates(): Promise<TemplateModel[]> {
-        var extensionDataManager = await this.GetExtensionDataClient();
-        // Get all documents in the collection
-        var docs: TemplateModel[]  = await extensionDataManager.getDocuments('TemplateCollection');
-        return docs;
+        return await this.extensionDataManager.getDocuments('TemplateCollection');
     }
 
     public async ClearTemplates() {
-        var extensionDataManager = await this.GetExtensionDataClient();
-
-        var docs: TemplateModel[]  = await extensionDataManager.getDocuments('TemplateCollection');
-        for (var i = 0; i < docs.length; i++) {
-            // TODO: This was docs[i]['id] ?
-            var id = docs[i].TemplateName;
-            await extensionDataManager.deleteDocument('TemplateCollection', id);
-          }
+        (await this.extensionDataManager.getDocuments('TemplateCollection')).forEach(async (document: TemplateModel) => {
+            debugger;
+            await this.extensionDataManager.deleteDocument('TemplateCollection', document.id!);
+        });
     }
 
-    private async GetExtensionDataClient() : Promise<IExtensionDataManager> {
-        var dataService = await SDK.getService<IExtensionDataService>(CommonServiceIds.ExtensionDataService);
-        
-        return await dataService.getExtensionDataManager(
-            'CodeBoost.devops-work-item-template-provider',
-            await SDK.getAccessToken()
-        );
+    public async UpdateTemplate(templateModel:TemplateModel): Promise<void> {
+        await this.extensionDataManager.updateDocument('TemplateCollection', templateModel);
+    }
+
+    public async DeleteTemplate(id: string): Promise<void> {
+        await this.extensionDataManager.deleteDocument('TemplateCollection', id);
     }
 }

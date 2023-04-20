@@ -38,12 +38,4 @@ export class TemplateLoadingProcessor {
 
         return await Promise.all(asyncTasks);
     }
-
-    public async InsertTestRecord()
-    {
-        var templateChildren: TemplatePartModel[] = [ 
-            { Title: 'Hello World', IsExisting: false, WorkItemNumber: 1, Attributes: []}
-        ];
-        await this.templateProvider.CreateDocument('Test Doc', templateChildren);
-    }
 }
