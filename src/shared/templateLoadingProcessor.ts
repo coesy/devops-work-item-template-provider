@@ -26,7 +26,7 @@ export class TemplateLoadingProcessor {
      * @param templateModel - Template to insert.
      */
     public async LoadChildren(templateModel: TemplateModel) : Promise<any> {
-        var asyncTasks = templateModel.Children.filter(async task => {
+        var asyncTasks = templateModel.children.filter(async task => {
             if (!task.IsExisting) {
                 await this.azureHttpClient.CreateTask(this.originalTaskNumber, task);
                 return 1;

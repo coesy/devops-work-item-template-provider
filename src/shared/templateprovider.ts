@@ -19,9 +19,7 @@ export class TemplateProvider implements IOptionsProvider {
         if (templateModel.id !== undefined)
             throw new Error('Unable to create a model with an ID');
 
-        var itemReturned = await this.extensionDataManager.createDocument('TemplateCollection', templateModel);
-debugger;
-        return templateModel;
+        return await this.extensionDataManager.createDocument('TemplateCollection', templateModel);
     }
 
     public async GetTemplates(): Promise<TemplateModel[]> {

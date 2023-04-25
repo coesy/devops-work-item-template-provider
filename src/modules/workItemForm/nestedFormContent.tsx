@@ -41,7 +41,7 @@ export class NestedFormContent extends React.Component<INestedFormContentState> 
                     <Dropdown<TemplateModel> 
                         className="dropDown"
                         items={this.nestedFormContentState.templates.map(template => {
-                            return { text: template.TemplateName, data: template, id: template.TemplateName };})} 
+                            return { text: template.templateName, data: template, id: template.templateName };})} 
                         onSelect={(sender, args) => this.dropdownChange(sender, args)} />
                 </div>
                 <div className="flex-stretch">
