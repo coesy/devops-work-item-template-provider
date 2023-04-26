@@ -1,22 +1,83 @@
 import "./configurationDialog.scss";
 import "es6-promise/auto";
-import * as SDK from 'azure-devops-extension-sdk';
 import React from "react";
 import ReactDOM from "react-dom";
 import { TextField } from "azure-devops-ui/TextField"
-import { Tab, TabBar, TabSize } from "azure-devops-ui/Tabs";
-import { Observable, ObservableValue } from "azure-devops-ui/Core/Observable";
-import { Dropdown } from "azure-devops-ui/Dropdown";
+import { Observable } from "azure-devops-ui/Core/Observable";
 import { TemplateModel } from "../../shared/templateModel";
-import { IListBoxItem } from "azure-devops-ui/ListBox";
-import { TemplateProvider } from "../../shared/templateprovider";
-import { CommonServiceIds, IExtensionDataService } from "azure-devops-extension-api";
-import { Button } from "azure-devops-ui/Button";
-import { Icon } from "azure-devops-ui/Icon";
-import { Spinner, SpinnerSize } from "azure-devops-ui/Spinner";
 import { ModelGenerator } from "./modelGenerator";
 import { TemplateItemEditorState } from "./templateItemEditorState";
 import { TemplateTargetWorkItemProperties } from "./templateTargetWorkItemProperties";
+import { TemplatePartModel } from "../../shared/templatePartModel";
+
+export interface TemplateItemEditorChildState {
+    templateModel: TemplateModel,
+    title: string,
+    childId: string
+};
+export class TemplateItemEditorChild extends React.Component<{ templateModel: Observable<TemplateModel>, childId: string }, TemplateItemEditorChildState> {
+    constructor(props: { templateModel: Observable<TemplateModel>, childId: string }) {
+        super(props);
+
+        this.state = {
+            templateModel: new ModelGenerator().defaultTemplateModel(),
+            title: '',
+            childId: props.childId
+        };
+
+        props.templateModel.subscribe(nestedTemplateModel => {
+            if (this.state.childId.length == 0) 
+                return;
+
+            this.setState({
+                templateModel: nestedTemplateModel,
+                title: nestedTemplateModel.children.filter(x => x.id === this.props.childId)[0].title
+            });
+        });
+
+        this.titleChange = this.titleChange.bind(this);
+    }
+
+    render(): React.ReactNode {
+        const localState = this.state;
+
+        return (
+            <>
+                <div className="flex-stretch"><span>New Child</span></div>
+                <div className="flex-stretch">
+                    <TextField value={localState.title} onChange={this.titleChange}></TextField>
+                </div>
+            </>
+            
+        );
+    }
+
+    private titleChange(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, value: string): void {
+        this.ensureCreated();
+
+        var model = this.state.templateModel;
+        model.children.filter(x => x.id == this.state.childId)[0].title = value;
+        this.props.templateModel.notify(model, 'Update', true);
+    }
+
+    private ensureCreated(): void {
+        if (this.state.childId.length !== 0) return;
+
+        var newId = crypto.randomUUID().toString();
+        var model = this.state.templateModel;
+        model.children.push({
+            id: newId,
+            isExisting: false,
+            workItemNumber: -1,
+            title: '',
+            attributes: []
+        });
+
+        this.setState({
+            childId: newId
+        });
+    }
+}
 
 export class TemplateItemEditor extends React.Component<{ templateModel: Observable<TemplateModel> }, TemplateItemEditorState> {
     constructor(props: { templateModel: Observable<TemplateModel> }) {
@@ -27,9 +88,21 @@ export class TemplateItemEditor extends React.Component<{ templateModel: Observa
         };
 
         props.templateModel.subscribe(nestedTemplateModel => {
+
+            // TODO: Track changes using IDs to only manipulate children added/removed/changed.
+
+            ReactDOM.unmountComponentAtNode($('.childContainer')[0]);
+            
             this.setState({
                 templateModel: nestedTemplateModel
             });
+
+            if (nestedTemplateModel.children === undefined)
+                return;
+
+            ReactDOM.render(
+                nestedTemplateModel.children.map(child => <TemplateItemEditorChild templateModel={this.props.templateModel} childId={child.id} />),
+                $('.childContainer')[0]);
         });
 
         this.onTemplateNameChange = this.onTemplateNameChange.bind(this);
@@ -55,6 +128,8 @@ export class TemplateItemEditor extends React.Component<{ templateModel: Observa
                     <TextField value={localState.templateModel.description} onChange={this.onDescriptionChange} multiline={true} />
                 </div>
                 <TemplateTargetWorkItemProperties templateModel={this.props.templateModel} />
+
+                <div className="childContainer"></div>
             </div>
         );
     }

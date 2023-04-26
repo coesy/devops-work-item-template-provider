@@ -3,21 +3,25 @@ import { TemplatePartCustomAttributeModel } from './templatePartCustomAttributeM
 /**
  * Represents a child task to insert.
  */
-export class TemplatePartModel {
+export interface TemplatePartModel {
+    /**
+     * ID used to determine one child element from another.
+     */
+    id: string,
     /**
      * Whether or not this task already exists.
      */
-    public IsExisting: boolean = false;
+    isExisting: boolean,
     /**
      * If this task already exists, then this will contain the target work item number.
      */
-    public WorkItemNumber: number = -1;
+    workItemNumber: number,
     /**
      * Title of the work item to insert, if this is a new task.
      */
-    public Title: string = '';
+    title: string,
     /**
      * Set of attributes to insert, if this is a new task.
      */
-    public Attributes: TemplatePartCustomAttributeModel[] = [];
+    attributes: TemplatePartCustomAttributeModel[]
 }

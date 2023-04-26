@@ -38,7 +38,7 @@ export class AzureHttpClient {
             {
               'op': 'add',
               'path': '/fields/System.Title',
-              'value': templatePartModel.Title
+              'value': templatePartModel.title
             },
             {
                 'op': 'add',

@@ -53,3 +53,11 @@ body {
 .spinningBlockerShow {
     display: block !important;
 }
+
+.collapseWrapper {
+    padding: 8px;    
+}
+
+.collapseWrapper > span {
+    float: right;
+}

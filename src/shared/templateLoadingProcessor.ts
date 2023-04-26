@@ -27,12 +27,12 @@ export class TemplateLoadingProcessor {
      */
     public async LoadChildren(templateModel: TemplateModel) : Promise<any> {
         var asyncTasks = templateModel.children.filter(async task => {
-            if (!task.IsExisting) {
+            if (!task.isExisting) {
                 await this.azureHttpClient.CreateTask(this.originalTaskNumber, task);
                 return 1;
             }
             
-            await this.azureHttpClient.LinkExistingTask(this.originalTaskNumber, task.WorkItemNumber);
+            await this.azureHttpClient.LinkExistingTask(this.originalTaskNumber, task.workItemNumber);
             return 1;
         });
 

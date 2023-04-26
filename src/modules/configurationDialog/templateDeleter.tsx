@@ -1,19 +1,11 @@
 import "./configurationDialog.scss";
 import "es6-promise/auto";
-import * as SDK from 'azure-devops-extension-sdk';
 import React from "react";
-import ReactDOM from "react-dom";
-import { TextField } from "azure-devops-ui/TextField"
-import { Tab, TabBar, TabSize } from "azure-devops-ui/Tabs";
-import { Observable, ObservableValue } from "azure-devops-ui/Core/Observable";
 import { Dropdown } from "azure-devops-ui/Dropdown";
 import { TemplateModel } from "../../shared/templateModel";
 import { IListBoxItem } from "azure-devops-ui/ListBox";
 import { TemplateProvider } from "../../shared/templateprovider";
-import { CommonServiceIds, IExtensionDataService } from "azure-devops-extension-api";
 import { Button } from "azure-devops-ui/Button";
-import { Icon } from "azure-devops-ui/Icon";
-import { Spinner, SpinnerSize } from "azure-devops-ui/Spinner";
 import { TemplateDeleterState } from "./templateDeleterState";
 
 export class TemplateDeleter extends React.Component<{ templateProvider: TemplateProvider }, TemplateDeleterState> {
@@ -49,10 +41,10 @@ export class TemplateDeleter extends React.Component<{ templateProvider: Templat
                     
                 </div>
 
-                <div className="flex-row">
+                <div className="flex-row margin-4">
                 <Button text="Delete" onClick={this.onDeleteButtonClick} className="buttonPadding" disabled={this.state.selectedTemplate === undefined} />
                 </div>
-                <div className="flex-row separator-line-top margin-top-8">
+                <div className="flex-row separator-line-top margin-8">
                     <span className="font-weight-semibold">{this.state.selectedTemplate?.templateName}</span>
                 </div>
                 <div className="flex-row">
