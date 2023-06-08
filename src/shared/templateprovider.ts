@@ -34,7 +34,6 @@ export class TemplateProvider implements IOptionsProvider {
     }
 
     public async UpdateTemplate(templateModel:TemplateModel): Promise<void> {
-debugger;
         await this.extensionDataManager.updateDocument('TemplateCollection', templateModel);
     }
 

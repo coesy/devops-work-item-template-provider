@@ -38,6 +38,7 @@ devops-work-item-template-provider
 3. Run `npm run dev` to dev (but VSS does not work, visual inspection only)
 4. Push changes to the publisher connection: https://marketplace.visualstudio.com/manage/publishers/codeboost
 5. Immediately view the changes on a user story in the devops space
+For a one line version increment, npm build and package run: `.\versionBumper.ps1 ; npm run build:dev ; npm run package:dev`
 
 # Components
 |Path|Description|

@@ -10,21 +10,27 @@ import { TemplateDeleter } from "./templateDeleter";
 import { TemplateNew } from "./templateNew";
 import { ConfigurationContainerContentState } from "./configurationContainerContentState";
 
+/**
+ * Entry TSX class for the configuration container content.
+ */
 export class ConfigurationContainerContent extends React.Component<{ templateProvider: TemplateProvider }, ConfigurationContainerContentState> {
+    /**
+     * Creates a new instance of `ConfigurationContainerContent`.
+     * @param props - Template provider used to pass down into child tabs.
+     */
     constructor(public props:{ templateProvider: TemplateProvider }) {
         super(props);
         this.state = {
             selectedTabId: 'edit'
         };
 
-        // Bind methods to allow 'this' references in React callback methods.
         this.onSelectedTabChanged = this.onSelectedTabChanged.bind(this);
         this.onTemplateNewSave = this.onTemplateNewSave.bind(this);
     }
 
     public render(): JSX.Element {
         return (
-            <div className="flex-column" style={{height:'800px'}} onLoad={() => { this.onSelectedTabChanged('edit'); }}>
+            <div className="flex-column" style={{height:'800px'}} onLoad={() => {  }}>
                 <TabBar
                     onSelectedTabChanged={this.onSelectedTabChanged}
                     selectedTabId={this.state.selectedTabId}

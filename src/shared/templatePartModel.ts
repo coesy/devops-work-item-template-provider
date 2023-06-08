@@ -23,5 +23,9 @@ export interface TemplatePartModel {
     /**
      * Set of attributes to insert, if this is a new task.
      */
-    attributes: TemplatePartCustomAttributeModel[]
+    attributes: TemplatePartCustomAttributeModel[],
+    /**
+     * Description to insert, if this is a new task.
+     */
+    description: string
 }

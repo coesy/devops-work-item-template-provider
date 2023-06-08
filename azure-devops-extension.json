@@ -1,12 +1,14 @@
-{
+﻿{
     "manifestVersion": 1,
     "id": "devops-work-item-template-provider",
     "publisher": "CodeBoost",
-    "version": "0.0.206",
+    "version": "0.0.272",
     "name": "CodeBoost.TemplateProvider",
     "description": "Inserts child tasks on a work item as according to templates",
     "public": false,
-    "categories": ["Azure Boards"],
+    "categories": [
+        "Azure Boards"
+    ],
     "targets": [
         {
             "id": "Microsoft.VisualStudio.Services"

@@ -57,7 +57,8 @@ export class TemplateEditor extends React.Component<{ templateProvider: Template
                     <Button text="Save" onClick={this.onSaveButtonClick} className="buttonPadding" disabled={!this.state.changed} />
                     <Button text="Discard Changes" onClick={this.onDiscardChangesClick} className="buttonPadding" disabled={!this.state.changed} />
                 </div>
-                <div className="flex-stretch separator-line-top margin-8" style={{display: this.state.showContent ? 'block' : 'none'}}>
+                <div className="separator-line-top margin-top-16 margin-bottom-8"></div>
+                <div className="flex-stretch" style={{display: this.state.showContent ? 'block' : 'none'}}>
                     <TemplateItemEditor templateModel={this.templateModelObserverable} />
                 </div>
             </div>

@@ -9,73 +9,86 @@ import { ModelGenerator } from "./modelGenerator";
 import { TemplateItemEditorState } from "./templateItemEditorState";
 import { TemplateTargetWorkItemProperties } from "./templateTargetWorkItemProperties";
 import { TemplatePartModel } from "../../shared/templatePartModel";
+import { Button } from "azure-devops-ui/Button";
+import * as SDK from 'azure-devops-extension-sdk/SDK';
+import { CommonServiceIds, IHostNavigationService, IHostPageLayoutService } from "azure-devops-extension-api";
+import { CustomDialogHandler } from "../../shared/customDialogHandler";
 
-export interface TemplateItemEditorChildState {
-    templateModel: TemplateModel,
-    title: string,
-    childId: string
-};
-export class TemplateItemEditorChild extends React.Component<{ templateModel: Observable<TemplateModel>, childId: string }, TemplateItemEditorChildState> {
-    constructor(props: { templateModel: Observable<TemplateModel>, childId: string }) {
+export interface TemplateItemEditorReadOnlyChildState {
+    expanded: boolean,
+    templateModel: TemplateModel
+}
+
+export class TemplateItemEditorReadOnlyChild extends React.Component< { templatePartModel: TemplatePartModel, templateModel: Observable<TemplateModel>, initialState: TemplateModel }, TemplateItemEditorReadOnlyChildState> {
+    public key: string;
+
+    constructor(props: { templatePartModel: TemplatePartModel, templateModel: Observable<TemplateModel>, initialState: TemplateModel}) {
         super(props);
 
         this.state = {
-            templateModel: new ModelGenerator().defaultTemplateModel(),
-            title: '',
-            childId: props.childId
+            expanded: false,
+            templateModel: props.initialState
         };
 
-        props.templateModel.subscribe(nestedTemplateModel => {
-            if (this.state.childId.length == 0) 
-                return;
+        props.templateModel.subscribe(newModel => this?.setState({templateModel: newModel}));
 
-            this.setState({
-                templateModel: nestedTemplateModel,
-                title: nestedTemplateModel.children.filter(x => x.id === this.props.childId)[0].title
-            });
-        });
-
-        this.titleChange = this.titleChange.bind(this);
+        this.reverseExpandedState = this.reverseExpandedState.bind(this);
+        this.deleteClick = this.deleteClick.bind(this);
+        this.key = props.templatePartModel.id;
     }
 
     render(): React.ReactNode {
-        const localState = this.state;
-
-        return (
-            <>
-                <div className="flex-stretch"><span>New Child</span></div>
-                <div className="flex-stretch">
-                    <TextField value={localState.title} onChange={this.titleChange}></TextField>
+        var reactDom = (
+            <div className="flex-stretch margin-top-8 margin-bottom-8 padding-16 depth-8 depth-8">
+                <div className="flex-grow">
+                    <span className="font-weight-heavy" onClick={this.reverseExpandedState}>{this.props.templatePartModel.isExisting ? this.props.templatePartModel.workItemNumber : this.props.templatePartModel.title}</span>
                 </div>
-            </>
-            
+
+                {
+                    this.props.templatePartModel.isExisting
+                    ?
+                    <>
+                        <div className="flex-row margin-top-16" style={{display: this.state.expanded ? 'block' : 'none'}}>
+                            <span className="font-weight-light">Work Item Id</span>
+                        </div>  
+                        <div className="flex-row margin-top-8" style={{display: this.state.expanded ? 'block' : 'none'}}>
+                            <span className="font-weight-medium">{this.props.templatePartModel.workItemNumber}</span>
+                        </div>
+                    </>
+                    :
+                    <>
+                        <div className="flex-row margin-top-16" style={{display: this.state.expanded ? 'block' : 'none'}}>
+                            <span className="font-weight-light">Description</span>
+                        </div>  
+                        <div className="flex-row margin-top-8" style={{display: this.state.expanded ? 'block' : 'none'}}>
+                            <span className="font-weight-medium">{this.props.templatePartModel.description}</span>
+                        </div>
+                    </>
+                }
+
+                <div className="flex-row margin-top-16" style={{display: this.state.expanded ? 'block' : 'none'}}>
+                    <Button onClick={this.deleteClick}>Delete</Button>
+                </div>
+                
+            </div>
         );
+
+        return reactDom;
     }
 
-    private titleChange(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, value: string): void {
-        this.ensureCreated();
-
-        var model = this.state.templateModel;
-        model.children.filter(x => x.id == this.state.childId)[0].title = value;
-        this.props.templateModel.notify(model, 'Update', true);
-    }
-
-    private ensureCreated(): void {
-        if (this.state.childId.length !== 0) return;
-
-        var newId = crypto.randomUUID().toString();
-        var model = this.state.templateModel;
-        model.children.push({
-            id: newId,
-            isExisting: false,
-            workItemNumber: -1,
-            title: '',
-            attributes: []
-        });
-
+    private reverseExpandedState(): void {
         this.setState({
-            childId: newId
+            expanded: !this.state.expanded
         });
+    }
+
+    private deleteClick(): void {
+        var model = this.state.templateModel;
+        var thisId = this.props.templatePartModel.id;
+        model.children = model.children.filter(x => x.id != thisId);
+
+        this.setState({expanded: false});
+        this.props.templateModel.notify(model, 'Removing Child', true);
     }
 }
 
@@ -88,26 +101,15 @@ export class TemplateItemEditor extends React.Component<{ templateModel: Observa
         };
 
         props.templateModel.subscribe(nestedTemplateModel => {
-
-            // TODO: Track changes using IDs to only manipulate children added/removed/changed.
-
-            ReactDOM.unmountComponentAtNode($('.childContainer')[0]);
-            
-            this.setState({
-                templateModel: nestedTemplateModel
-            });
-
-            if (nestedTemplateModel.children === undefined)
-                return;
-
-            ReactDOM.render(
-                nestedTemplateModel.children.map(child => <TemplateItemEditorChild templateModel={this.props.templateModel} childId={child.id} />),
-                $('.childContainer')[0]);
+            this.setState({templateModel: nestedTemplateModel});
         });
 
         this.onTemplateNameChange = this.onTemplateNameChange.bind(this);
         this.onDescriptionChange = this.onDescriptionChange.bind(this);
         this.isValid = this.isValid.bind(this);
+        this.onNewChildClick = this.onNewChildClick.bind(this);
+        this.onExistingChildClick = this.onExistingChildClick.bind(this);
+        this.addViaDialog = this.addViaDialog.bind(this);
     }
 
     render(): React.ReactNode {
@@ -116,20 +118,38 @@ export class TemplateItemEditor extends React.Component<{ templateModel: Observa
         return (
             <div>
                 <div className="flex-row">
+                    <span className="font-weight-heavy">Template Properties</span>
+                </div>
+                <div className="flex-row margin-top-4">
                     <span className="font-weight-light">Template Name</span>
                 </div>
                 <div className="flex-stretch">
                     <TextField value={localState.templateModel.templateName} onChange={this.onTemplateNameChange} />
                 </div>
-                <div className="flex-row">
+                <div className="flex-row margin-top-4">
                     <span className="font-weight-light">Description</span>
                 </div>
                 <div className="flex-stretch">
                     <TextField value={localState.templateModel.description} onChange={this.onDescriptionChange} multiline={true} />
                 </div>
+
                 <TemplateTargetWorkItemProperties templateModel={this.props.templateModel} />
 
-                <div className="childContainer"></div>
+                <div className="separator-line-top margin-top-16 margin-bottom-8"></div>
+                <div className="flex-stretch">
+                    <span className="font-weight-heavy">Child Tasks</span>
+                </div>
+                <div className="flex-stretch">
+                    <Button className="margin-left-4 margin-right-4" onClick={async() => await this.addViaDialog()}>Add Child Task</Button>
+                </div>
+
+                {
+                    (localState.templateModel?.children ?? []).map(x => 
+                        <TemplateItemEditorReadOnlyChild 
+                            templatePartModel={x} 
+                            templateModel={this.props.templateModel} 
+                            initialState={this.state.templateModel} />)
+                }
             </div>
         );
     }
@@ -152,5 +172,29 @@ export class TemplateItemEditor extends React.Component<{ templateModel: Observa
         templateModel.description = value;
 
         this.props.templateModel.notify(templateModel, 'Update', true);
+    }
+
+    private onNewChildClick(event: React.MouseEvent<HTMLElement, MouseEvent> | React.KeyboardEvent<HTMLElement>): void {
+        var templateModel = this.state.templateModel;
+        var newChild = new ModelGenerator().newTemplatePartModel(false);
+
+        templateModel.children = [...templateModel?.children ?? [], newChild];
+        this.props.templateModel.notify(templateModel, 'Add Child', true);
+    }
+
+    private onExistingChildClick(event: React.MouseEvent<HTMLElement, MouseEvent> | React.KeyboardEvent<HTMLElement>): void {
+        var templateModel = this.state.templateModel;
+        var toAdd = new ModelGenerator().newTemplatePartModel(true);
+        
+        templateModel.children = [...templateModel?.children ?? [], toAdd];
+        this.props.templateModel.notify(templateModel, 'Add Child', true);
+    }
+
+    private async addViaDialog(): Promise<void> {
+        var hostPageLayoutService = await SDK.getService<IHostPageLayoutService>(CommonServiceIds.HostPageLayoutService)
+            var hostNavigationService = await SDK.getService<IHostNavigationService>(CommonServiceIds.HostNavigationService);
+
+            new CustomDialogHandler(hostPageLayoutService, hostNavigationService)
+                .showWorkItemSelector(this.props.templateModel, this.state.templateModel);
     }
 }

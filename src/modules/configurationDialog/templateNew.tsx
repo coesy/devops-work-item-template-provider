@@ -37,7 +37,8 @@ export class TemplateNew extends React.Component<{ templateProvider: TemplatePro
                 <div className="flex-row">
                     <Button text="Save" onClick={this.onSaveButtonClick} className="buttonPadding" disabled={!this.state.modelValid} />
                 </div>
-                <div className="flex-stretch separator-line-top margin-top-8">
+                <div className="separator-line-top margin-top-16 margin-bottom-8"></div>
+                <div className="flex-stretch">
                     <TemplateItemEditor templateModel={this.templateModelObserverable} />
                 </div>
             </div>

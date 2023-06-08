@@ -7,9 +7,10 @@ import { TemplateProvider } from "../../shared/templateprovider";
 import { CommonServiceIds, IExtensionDataService } from "azure-devops-extension-api";
 import { ConfigurationContainerContent } from "./configurationContainerContent";
 
+/**
+ * 
+ */
 SDK.init().then(async () => {
-    // Get configuration as follows.
-    // var configuration = SDK.getConfiguration();
     var dataService = await SDK.getService<IExtensionDataService>(CommonServiceIds.ExtensionDataService);
     var dataManager = await dataService.getExtensionDataManager(
         'CodeBoost.devops-work-item-template-provider',
