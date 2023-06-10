@@ -1,7 +1,5 @@
 import { AzureHttpClient } from './azureHttpClient';
 import { TemplateModel } from './templateModel';
-import { TemplatePartCustomAttributeModel } from './templatePartCustomAttributeModel';
-import { TemplatePartModel } from './templatePartModel';
 import { TemplateProvider } from './templateprovider';
 
 /**

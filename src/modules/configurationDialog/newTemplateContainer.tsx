@@ -5,15 +5,25 @@ import { Observable, ObservableValue } from "azure-devops-ui/Core/Observable";
 import { TemplateModel } from "../../shared/templateModel";
 import { TemplateProvider } from "../../shared/templateprovider";
 import { Button } from "azure-devops-ui/Button";
-import { ModelGenerator } from "./modelGenerator";
-import { TemplateNewState } from "./templateNewState";
+import { ModelGenerator } from "../../shared/modelGenerator";
+import { NewTemplateContainerState } from "./newTemplateContainerState";
 import { TemplateItemEditor } from "./templateItemEditor";
 
-export class TemplateNew extends React.Component<{ templateProvider: TemplateProvider, onSave:{(name:string): void }|undefined }, TemplateNewState> {
-
-    templateModelObserverable : Observable<TemplateModel> 
+/**
+ * React UI for a new template.
+ */
+export class NewTemplateContainer extends React.Component<{ templateProvider: TemplateProvider, onSave:{(name:string): void }|undefined }, NewTemplateContainerState> {
+    /**
+     * Root observerable used by this entire UI tree. All updates on this model are stored as changes,
+     * and this is written if save/create is invoked.
+     */
+    private templateModelObserverable : Observable<TemplateModel> 
         = new ObservableValue<TemplateModel>(new ModelGenerator().defaultTemplateModel());
 
+    /**
+     * Creates a new instance of `NewTemplateContainer`.
+     * @param props - Represents a set of properties set in the react constructor.
+     */
     constructor(props: { templates:TemplateModel[], templateProvider: TemplateProvider, onSave:{(name:string): void }|undefined }) { 
         super(props);
         this.state = {
@@ -29,6 +39,10 @@ export class TemplateNew extends React.Component<{ templateProvider: TemplatePro
         this.onSaveButtonClick = this.onSaveButtonClick.bind(this);
     }
 
+    /**
+     * React UI render method.
+     * @returns UI content to render in the element React has been configured to render into.
+     */
     render(): React.ReactNode {
         const state = this.state;
 
@@ -45,6 +59,10 @@ export class TemplateNew extends React.Component<{ templateProvider: TemplatePro
         );
     }
 
+    /**
+     * Save button event, if model state is valid saves the current instance.
+     * @param event - React event, unused.
+     */
     private async onSaveButtonClick(event: React.MouseEvent<HTMLElement, MouseEvent> | React.KeyboardEvent<HTMLElement>): Promise<void> {
         if (!this.state.modelValid)
         {

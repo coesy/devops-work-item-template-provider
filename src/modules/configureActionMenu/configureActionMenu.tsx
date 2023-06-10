@@ -4,7 +4,9 @@ import * as SDK from 'azure-devops-extension-sdk/SDK';
 import { CommonServiceIds, IHostNavigationService, IHostPageLayoutService } from "azure-devops-extension-api";
 import { CustomDialogHandler } from "../../shared/customDialogHandler";
 
-// Create a handler which handles the menu items.
+/**
+ * Azure UI provider, used to load a react element into an Azure container. 
+ */
 var configureActionMenuProvider = () => {
     return {
         execute: async function(actionContext:any) {
@@ -17,7 +19,13 @@ var configureActionMenuProvider = () => {
     };
 };
 
+/**
+ * Registers this component and handler with the devops SDK.
+ */
 SDK.register('CodeBoost.devops-work-item-template-provider.configureActionMenu', configureActionMenuProvider);
+/**
+ * SDK init entrypoint.
+ */
 SDK.init().then(async () => {
     
 });

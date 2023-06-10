@@ -7,15 +7,25 @@ import { TemplateModel } from "../../shared/templateModel";
 import { IListBoxItem } from "azure-devops-ui/ListBox";
 import { TemplateProvider } from "../../shared/templateprovider";
 import { Button } from "azure-devops-ui/Button";
-import { ModelGenerator } from "./modelGenerator";
+import { ModelGenerator } from "../../shared/modelGenerator";
 import { TemplateItemEditor } from "./templateItemEditor";
-import { TemplateEditorState } from "./templateEditorState";
+import { EditTemplateContainerState } from "./editTemplateContainerState";
 
-export class TemplateEditor extends React.Component<{ templateProvider: TemplateProvider }, TemplateEditorState> {
-
-    templateModelObserverable : Observable<TemplateModel> 
+/**
+ * TSX class for the template editor content. Handles the UI for editing a new or existing template.
+ */
+export class EditTemplateContainer extends React.Component<{ templateProvider: TemplateProvider }, EditTemplateContainerState> {
+    /**
+     * Root observerable used by this entire UI tree. All updates on this model are stored as changes,
+     * and this is written if save/create is invoked.
+     */
+    private templateModelObserverable : Observable<TemplateModel> 
         = new ObservableValue<TemplateModel>(new ModelGenerator().defaultTemplateModel());
 
+    /**
+     * Creates a new instance of `EditTemplateContainer`.
+     * @param props - Represents a set of properties set in the react constructor.
+     */
     constructor(props: { templates:TemplateModel[], templateProvider: TemplateProvider }) { 
         super(props);
         this.state = {
@@ -40,6 +50,10 @@ export class TemplateEditor extends React.Component<{ templateProvider: Template
         this.loadTemplatesFromStore();
     }
 
+    /**
+     * React UI render method.
+     * @returns UI content to render in the element React has been configured to render into.
+     */
     render(): React.ReactNode {
         const state = this.state;
 
@@ -65,6 +79,9 @@ export class TemplateEditor extends React.Component<{ templateProvider: Template
         );
     }
 
+    /**
+     * Reads all templates from the SDK then loads them into state.
+     */
     private async loadTemplatesFromStore(): Promise<void>  {
         var templates = await this.props.templateProvider.GetTemplates();
         templates = templates.sort((n1,n2) => {
@@ -84,6 +101,10 @@ export class TemplateEditor extends React.Component<{ templateProvider: Template
         });
     }
 
+    /**
+     * Sets the current state to the template matching the given template ID.
+     * @param templateId - Template ID to use when looking up a template to assign to state.
+     */
     private loadTemplate(templateId: string): void {
         var templateModels = this.state.templates.filter(x => x.id == templateId);
         if (templateModels.length !== 1)
@@ -99,11 +120,19 @@ export class TemplateEditor extends React.Component<{ templateProvider: Template
         });
     }
 
+    /**
+     * Handles the template change event.
+     * @param event - React event, unused.
+     * @param item - Newly selected template details.
+     */
     private onTemplateChange(event: React.SyntheticEvent<HTMLElement, Event>, item: IListBoxItem<{}>) {
-
         this.loadTemplate(item.id);
     }
 
+    /**
+     * Handles the save event.
+     * @param event - React event, unused.
+     */
     private async onSaveButtonClick(event: React.MouseEvent<HTMLElement, MouseEvent> | React.KeyboardEvent<HTMLElement>): Promise<void> {
         if (!this.state.changed)
         {
@@ -127,6 +156,10 @@ export class TemplateEditor extends React.Component<{ templateProvider: Template
         $('.spinningBlocker').removeClass('spinningBlockerShow');
     }
 
+    /**
+     * Handles the discard changes event. Reloads the current state from the SDK store.
+     * @param event 
+     */
     private onDiscardChangesClick(event: React.MouseEvent<HTMLElement, MouseEvent> | React.KeyboardEvent<HTMLElement>): void {
         this.loadTemplatesFromStore();
         this.loadTemplate(this.state.selectedTemplate?.id!);

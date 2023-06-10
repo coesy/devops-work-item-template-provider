@@ -1,98 +1,26 @@
 import "./configurationDialog.scss";
 import "es6-promise/auto";
 import React from "react";
-import ReactDOM from "react-dom";
 import { TextField } from "azure-devops-ui/TextField"
 import { Observable } from "azure-devops-ui/Core/Observable";
 import { TemplateModel } from "../../shared/templateModel";
-import { ModelGenerator } from "./modelGenerator";
+import { ModelGenerator } from "../../shared/modelGenerator";
 import { TemplateItemEditorState } from "./templateItemEditorState";
-import { TemplateTargetWorkItemProperties } from "./templateTargetWorkItemProperties";
-import { TemplatePartModel } from "../../shared/templatePartModel";
+import { TemplateItemPropertiesEditor } from "./templateItemPropertiesEditor";
 import { Button } from "azure-devops-ui/Button";
 import * as SDK from 'azure-devops-extension-sdk/SDK';
 import { CommonServiceIds, IHostNavigationService, IHostPageLayoutService } from "azure-devops-extension-api";
 import { CustomDialogHandler } from "../../shared/customDialogHandler";
+import { TemplateItemEditorReadOnlyChild } from "./templateItemEditorReadOnlyChild";
 
-export interface TemplateItemEditorReadOnlyChildState {
-    expanded: boolean,
-    templateModel: TemplateModel
-}
-
-export class TemplateItemEditorReadOnlyChild extends React.Component< { templatePartModel: TemplatePartModel, templateModel: Observable<TemplateModel>, initialState: TemplateModel }, TemplateItemEditorReadOnlyChildState> {
-    public key: string;
-
-    constructor(props: { templatePartModel: TemplatePartModel, templateModel: Observable<TemplateModel>, initialState: TemplateModel}) {
-        super(props);
-
-        this.state = {
-            expanded: false,
-            templateModel: props.initialState
-        };
-
-        props.templateModel.subscribe(newModel => this?.setState({templateModel: newModel}));
-
-        this.reverseExpandedState = this.reverseExpandedState.bind(this);
-        this.deleteClick = this.deleteClick.bind(this);
-        this.key = props.templatePartModel.id;
-    }
-
-    render(): React.ReactNode {
-        var reactDom = (
-            <div className="flex-stretch margin-top-8 margin-bottom-8 padding-16 depth-8 depth-8">
-                <div className="flex-grow">
-                    <span className="font-weight-heavy" onClick={this.reverseExpandedState}>{this.props.templatePartModel.isExisting ? this.props.templatePartModel.workItemNumber : this.props.templatePartModel.title}</span>
-                </div>
-
-                {
-                    this.props.templatePartModel.isExisting
-                    ?
-                    <>
-                        <div className="flex-row margin-top-16" style={{display: this.state.expanded ? 'block' : 'none'}}>
-                            <span className="font-weight-light">Work Item Id</span>
-                        </div>  
-                        <div className="flex-row margin-top-8" style={{display: this.state.expanded ? 'block' : 'none'}}>
-                            <span className="font-weight-medium">{this.props.templatePartModel.workItemNumber}</span>
-                        </div>
-                    </>
-                    :
-                    <>
-                        <div className="flex-row margin-top-16" style={{display: this.state.expanded ? 'block' : 'none'}}>
-                            <span className="font-weight-light">Description</span>
-                        </div>  
-                        <div className="flex-row margin-top-8" style={{display: this.state.expanded ? 'block' : 'none'}}>
-                            <span className="font-weight-medium">{this.props.templatePartModel.description}</span>
-                        </div>
-                    </>
-                }
-
-                <div className="flex-row margin-top-16" style={{display: this.state.expanded ? 'block' : 'none'}}>
-                    <Button onClick={this.deleteClick}>Delete</Button>
-                </div>
-                
-            </div>
-        );
-
-        return reactDom;
-    }
-
-    private reverseExpandedState(): void {
-        this.setState({
-            expanded: !this.state.expanded
-        });
-    }
-
-    private deleteClick(): void {
-        var model = this.state.templateModel;
-        var thisId = this.props.templatePartModel.id;
-        model.children = model.children.filter(x => x.id != thisId);
-
-        this.setState({expanded: false});
-        this.props.templateModel.notify(model, 'Removing Child', true);
-    }
-}
-
+/**
+ * React UI element for a template item editor.
+ */
 export class TemplateItemEditor extends React.Component<{ templateModel: Observable<TemplateModel> }, TemplateItemEditorState> {
+    /**
+     * Creates a new instance of `TemplateItemEditor`.
+     * @param props - Represents a set of properties set in the react constructor.
+     */
     constructor(props: { templateModel: Observable<TemplateModel> }) {
         super(props);
 
@@ -112,6 +40,10 @@ export class TemplateItemEditor extends React.Component<{ templateModel: Observa
         this.addViaDialog = this.addViaDialog.bind(this);
     }
 
+    /**
+     * React UI render method.
+     * @returns UI content to render in the element React has been configured to render into.
+     */
     render(): React.ReactNode {
         const localState = this.state;
 
@@ -133,7 +65,7 @@ export class TemplateItemEditor extends React.Component<{ templateModel: Observa
                     <TextField value={localState.templateModel.description} onChange={this.onDescriptionChange} multiline={true} />
                 </div>
 
-                <TemplateTargetWorkItemProperties templateModel={this.props.templateModel} />
+                <TemplateItemPropertiesEditor templateModel={this.props.templateModel} />
 
                 <div className="separator-line-top margin-top-16 margin-bottom-8"></div>
                 <div className="flex-stretch">

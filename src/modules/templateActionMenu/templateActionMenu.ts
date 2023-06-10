@@ -2,7 +2,9 @@ import "es6-promise/auto";
 
 import * as SDK from 'azure-devops-extension-sdk/SDK';
 
-// Create a handler which handles the menu items.
+/**
+ * Azure UI provider, used to load a react element into an Azure container. 
+ */
 var templateActionMenuProvider = () => {
     return {
         execute: function(actionContext:any) {
@@ -13,5 +15,11 @@ var templateActionMenuProvider = () => {
     };
 };
 
+/**
+ * Registers this component and handler with the devops SDK.
+ */
 SDK.register('CodeBoost.devops-work-item-template-provider.templateActionMenu', templateActionMenuProvider);
+/**
+ * SDK init entrypoint.
+ */
 SDK.init();

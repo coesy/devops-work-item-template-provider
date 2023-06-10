@@ -5,10 +5,10 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { TemplateProvider } from "../../shared/templateprovider";
 import { CommonServiceIds, IExtensionDataService } from "azure-devops-extension-api";
-import { ConfigurationContainerContent } from "./configurationContainerContent";
+import { ConfigurationTabHandler } from "./configurationTabHandler";
 
 /**
- * 
+ * SDK entrypoint to load the configuration dialog UI.
  */
 SDK.init().then(async () => {
     var dataService = await SDK.getService<IExtensionDataService>(CommonServiceIds.ExtensionDataService);
@@ -19,7 +19,7 @@ SDK.init().then(async () => {
 
     var templateProvider = new TemplateProvider(dataManager);
 
-    var nestedFormContent = <ConfigurationContainerContent 
+    var nestedFormContent = <ConfigurationTabHandler 
         templateProvider={templateProvider} />;
         
     ReactDOM.render(

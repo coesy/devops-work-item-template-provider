@@ -1,3 +1,4 @@
+import { TemplateModelAttribute } from './templateModelAttribute';
 import { TemplatePartModel } from './templatePartModel';
 
 /**
@@ -24,9 +25,4 @@ export interface TemplateModel {
      * A description which, if not 
      */
     workItemDescription: TemplateModelAttribute|undefined
-}
-
-export interface TemplateModelAttribute {
-    toApply: boolean,
-    value: string
 }

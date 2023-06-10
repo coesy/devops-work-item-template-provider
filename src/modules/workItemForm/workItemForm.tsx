@@ -1,6 +1,5 @@
 import "./workItemForm.scss";
 import "es6-promise/auto";
-
 import * as SDK from 'azure-devops-extension-sdk/SDK';
 import { IWorkItemLoadedArgs } from 'azure-devops-extension-api/WorkItemTracking/WorkItemTrackingServices';
 import { AzureHttpClient } from '../../shared/azureHttpClient';
@@ -10,8 +9,11 @@ import { CommonServiceIds, getClient, IExtensionDataService, IProjectPageService
 import { WorkItemTrackingRestClient } from 'azure-devops-extension-api/WorkItemTracking/WorkItemTrackingClient';
 import React from "react";
 import * as ReactDOM from 'react-dom';
-import { NestedFormContent } from "./nestedFormContent";
+import { WorkItemFormContent } from "./workItemFormContent";
 
+/**
+ * Azure UI provider, used to load a react element into an Azure container. 
+ */
 var embdeddedInWorkItemFormProvider = () => {
     return {
         onLoaded: async (workItemLoadedArgs: IWorkItemLoadedArgs) => {
@@ -21,8 +23,8 @@ var embdeddedInWorkItemFormProvider = () => {
             var client = getClient(WorkItemTrackingRestClient)
 
             var httpClient = new AzureHttpClient(
-                host.id, // Organisation 'danieljeffries'
-                project!.id, // Project 'Azure Web Extensions'
+                host.id,
+                project!.id,
                 client
             );
 
@@ -40,7 +42,7 @@ var embdeddedInWorkItemFormProvider = () => {
                 workItemLoadedArgs.id);
 
             var templates = await templateProvider.GetTemplates();
-            var nestedFormContent = <NestedFormContent 
+            var nestedFormContent = <WorkItemFormContent 
                 templates={templates} 
                 templateLoadingProcessor={templateLoadingProcessor} />;
 
@@ -54,5 +56,11 @@ var embdeddedInWorkItemFormProvider = () => {
     }
 };
 
+/**
+ * Registers this component and handler with the devops SDK.
+ */
 SDK.register('CodeBoost.devops-work-item-template-provider.embdeddedInWorkItemForm', embdeddedInWorkItemFormProvider);
+/**
+ * SDK init entrypoint.
+ */
 SDK.init();

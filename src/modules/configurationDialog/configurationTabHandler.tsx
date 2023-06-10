@@ -5,32 +5,37 @@ import ReactDOM from "react-dom";
 import { Tab, TabBar, TabSize } from "azure-devops-ui/Tabs";
 import { TemplateProvider } from "../../shared/templateprovider";
 import { Spinner, SpinnerSize } from "azure-devops-ui/Spinner";
-import { TemplateEditor } from "./templateEditor";
-import { TemplateDeleter } from "./templateDeleter";
-import { TemplateNew } from "./templateNew";
-import { ConfigurationContainerContentState } from "./configurationContainerContentState";
+import { EditTemplateContainer } from "./editTemplateContainer";
+import { DeleteTemplateContainer } from "./deleteTemplateContainer";
+import { NewTemplateContainer } from "./newTemplateContainer";
+import { ConfigurationTabHandlerState } from "./configurationTabHandlerState";
+import $ from 'jquery';
 
 /**
  * Entry TSX class for the configuration container content.
  */
-export class ConfigurationContainerContent extends React.Component<{ templateProvider: TemplateProvider }, ConfigurationContainerContentState> {
+export class ConfigurationTabHandler extends React.Component<{ templateProvider: TemplateProvider }, ConfigurationTabHandlerState> {
     /**
-     * Creates a new instance of `ConfigurationContainerContent`.
+     * Creates a new instance of `ConfigurationTabHandler`.
      * @param props - Template provider used to pass down into child tabs.
      */
-    constructor(public props:{ templateProvider: TemplateProvider }) {
+    constructor(public props: { templateProvider: TemplateProvider }) {
         super(props);
         this.state = {
             selectedTabId: 'edit'
         };
 
         this.onSelectedTabChanged = this.onSelectedTabChanged.bind(this);
-        this.onTemplateNewSave = this.onTemplateNewSave.bind(this);
+        this.onNewTemplateContainerSave = this.onNewTemplateContainerSave.bind(this);
     }
 
+    /**
+     * React UI render method.
+     * @returns UI content to render in the element React has been configured to render into.
+     */
     public render(): JSX.Element {
         return (
-            <div className="flex-column" style={{height:'800px'}} onLoad={() => {  }}>
+            <div className="flex-column" style={{ height: '800px' }} onLoad={() => { }}>
                 <TabBar
                     onSelectedTabChanged={this.onSelectedTabChanged}
                     selectedTabId={this.state.selectedTabId}
@@ -42,40 +47,45 @@ export class ConfigurationContainerContent extends React.Component<{ templatePro
                 <div className="spinningBlocker">
                     <Spinner size={SpinnerSize.large} />
                 </div>
-                
-                <div className="tabRoot" style={{overflow:'scroll'}}></div>
+
+                <div className="tabRoot" style={{ overflow: 'scroll' }}></div>
             </div>
         );
     }
 
+    /**
+     * Handles the tab change event.
+     * @param newTabId - Target tab code to change to. Currently 'edit', 'delete', 'new'.
+     */
     private async onSelectedTabChanged(newTabId: string) {
         this.setState({
             selectedTabId: newTabId
         });
 
-        if (newTabId == 'edit')
-        {
+        if (newTabId == 'edit') {
             ReactDOM.render(
-                <TemplateEditor 
+                <EditTemplateContainer
                     templateProvider={this.props.templateProvider} />,
                 $('.tabRoot')[0]);
-        } else if (newTabId == 'delete')
-        {
+        } else if (newTabId == 'delete') {
             ReactDOM.render(
-                <TemplateDeleter
+                <DeleteTemplateContainer
                     templateProvider={this.props.templateProvider} />,
                 $('.tabRoot')[0]);
-        } else if (newTabId == 'new')
-        {
+        } else if (newTabId == 'new') {
             ReactDOM.render(
-                <TemplateNew
+                <NewTemplateContainer
                     templateProvider={this.props.templateProvider}
-                    onSave={this.onTemplateNewSave} />,
+                    onSave={this.onNewTemplateContainerSave} />,
                 $('.tabRoot')[0]);
         }
     }
 
-    private onTemplateNewSave(name: string): void {
+    /**
+     * Call to move to the edit tab. Handles the redirect when a new template has been added.
+     * @oaram name - Name of the new template to load in the edit window. Currently unused.
+     */
+    private onNewTemplateContainerSave(name: string): void {
         this.setState({
             selectedTabId: 'edit'
         });

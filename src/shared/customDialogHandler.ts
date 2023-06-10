@@ -4,14 +4,10 @@ import { WorkItemTaskSelectorConfiguration } from '../modules/workItemTaskSelect
 import { Observable } from 'azure-devops-ui/Core/Observable';
 import { TemplateModel } from './templateModel';
 import { TemplatePartModel } from './templatePartModel';
-
-export class ConfigurationDialogConfiguration
-{
-    //public test: string = "";
-}
+import { ConfigurationDialogConfiguration } from '../modules/configurationDialog/configurationDialogConfiguration';
 
 /**
- * 
+ * A handler which can be used to load dialogs.
  */
 export class CustomDialogHandler {
     constructor (
@@ -20,24 +16,29 @@ export class CustomDialogHandler {
         
     }
 
-    public showConfigurationDialog() : void {
-        var dialogOptions :IDialogOptions<ConfigurationDialogConfiguration> = {};
+    /**
+     * Show the configuration dialog for template management.
+     */
+    public showConfigurationDialog(): void {
+        var dialogOptions: IDialogOptions<ConfigurationDialogConfiguration> = {};
         dialogOptions.title = 'CodeBoost Configuration';
         dialogOptions.lightDismiss = true;
-        var configuration = new ConfigurationDialogConfiguration();
-        dialogOptions.configuration = configuration;
+        dialogOptions.configuration = {};
 
-        this.hostPageLayoutService.openCustomDialog(SDK.getExtensionContext().id + '.configurationDialog', dialogOptions);
+        this.hostPageLayoutService
+            .openCustomDialog(SDK.getExtensionContext().id + '.configurationDialog', dialogOptions);
     }
 
+    /**
+     * Show the target work item selector.
+     * @param templateModel - Current work item. Observerable into which children are inserted (if applicable from this dialog).
+     * @param instance - Seed instance of `templateModel`.
+     */
     public showWorkItemSelector(templateModel: Observable<TemplateModel>, instance: TemplateModel): void {
         var dialogOptions :IDialogOptions<TemplatePartModel> = {};
         dialogOptions.title = 'Work Item Selector';
         dialogOptions.lightDismiss = true;
-        var configuration = {
-            
-        };
-        dialogOptions.configuration = configuration;
+        dialogOptions.configuration = {};
 
         templateModel.subscribe(newValue => instance = newValue);
 

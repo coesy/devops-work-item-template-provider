@@ -6,10 +6,17 @@ import { TemplateModel } from "../../shared/templateModel";
 import { IListBoxItem } from "azure-devops-ui/ListBox";
 import { TemplateProvider } from "../../shared/templateprovider";
 import { Button } from "azure-devops-ui/Button";
-import { TemplateDeleterState } from "./templateDeleterState";
+import { DeleteTemplateContainerState } from "./deleteTemplateContainerState";
 
-export class TemplateDeleter extends React.Component<{ templateProvider: TemplateProvider }, TemplateDeleterState> {
+/**
+ * React class for the delete template tab in the configuration dialog.
+ */
+export class DeleteTemplateContainer extends React.Component<{ templateProvider: TemplateProvider }, DeleteTemplateContainerState> {
 
+    /**
+     * Creates a new instance of `DeleteTemplateContainer`.
+     * @param props - Represents a set of properties set in the react constructor.
+     */
     constructor(props: { templates:TemplateModel[], templateProvider: TemplateProvider }) { 
         super(props);
         this.state = {
@@ -25,6 +32,10 @@ export class TemplateDeleter extends React.Component<{ templateProvider: Templat
         this.loadTemplatesFromStore();
     }
 
+    /**
+     * React UI render method.
+     * @returns UI content to render in the element React has been configured to render into.
+     */
     render(): React.ReactNode {
         const state = this.state;
 
@@ -54,17 +65,24 @@ export class TemplateDeleter extends React.Component<{ templateProvider: Templat
         );
     }
 
-    private loadTemplatesFromStore(): void {
-        this.props.templateProvider.GetTemplates().then(templates => {
-            this.setState({
-                templates: templates,
-                dropDownItems: templates.map(template => { return {id: template.id!, text: template.templateName};})
-            });
+    /**
+     * Reads all templates from the SDK then loads them into state.
+     */
+    private async loadTemplatesFromStore(): Promise<void> {
+        var templates = await this.props.templateProvider.GetTemplates();
+    
+        this.setState({
+            templates: templates,
+            dropDownItems: templates.map(template => { return {id: template.id!, text: template.templateName};})
         });
     }
 
+    /**
+     * Handles the template drop downbox change event, sets the state to the newly selected item.
+     * @param event - React event, unused.
+     * @param item - Details the new dropdown box item.
+     */
     private onTemplateChange(event: React.SyntheticEvent<HTMLElement, Event>, item: IListBoxItem<{}>) {
-
         var filtered = this.state.templates.filter(x => x.id === item.id);
 
         this.setState({
@@ -72,6 +90,10 @@ export class TemplateDeleter extends React.Component<{ templateProvider: Templat
         });
     }
 
+    /**
+     * Handles the delete button action. Deletes the currently selected item from the SDK config store.
+     * @param event - React event, unused.
+     */
     private async onDeleteButtonClick(event: React.MouseEvent<HTMLElement, MouseEvent> | React.KeyboardEvent<HTMLElement>): Promise<void> {
         if (this.state.selectedTemplate === undefined || this.state.selectedTemplate.id === undefined || this.state.selectedTemplate.id.length == 0)
         {

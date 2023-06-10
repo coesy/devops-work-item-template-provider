@@ -2,12 +2,14 @@ import "./workItemTaskSelector.scss";
 import React from "react";
 import { TemplateModel } from "../../shared/templateModel";
 import { Observable } from "azure-devops-ui/Core/Observable";
-import { ModelGenerator } from "../configurationDialog/modelGenerator";
+import { ModelGenerator } from "../../shared/modelGenerator";
 import { TextField } from "azure-devops-ui/TextField";
 import { Button } from "azure-devops-ui/Button";
 import { TemplatePartModel } from "../../shared/templatePartModel";
 import * as SDK from 'azure-devops-extension-sdk';
 import { CommonServiceIds, IExtensionDataService, IHostPageLayoutService } from "azure-devops-extension-api";
+import { TemplateItemEditorReadOnlyChild } from "../configurationDialog/templateItemEditorReadOnlyChild";
+import { TemplatePartModelExistingType } from "../../shared/templatePartModelExistingType";
 
 export interface WorkItemTaskSelectorContentState {
     isExisting: boolean,
@@ -35,6 +37,10 @@ export class WorkItemTaskSelectorContent extends React.Component<{}, WorkItemTas
         this.save = this.save.bind(this);
     }
 
+    /**
+     * React UI render method.
+     * @returns UI content to render in the element React has been configured to render into.
+     */
     public render(): JSX.Element {
         var localState = this.state;
         return (
@@ -123,7 +129,8 @@ export class WorkItemTaskSelectorContent extends React.Component<{}, WorkItemTas
             //        key: '',
             //        value: ''
             //    }
-            ]
+            ],
+            copyType: TemplatePartModelExistingType.Link
         };
 
         const config = SDK.getConfiguration();

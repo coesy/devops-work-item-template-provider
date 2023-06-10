@@ -1,4 +1,5 @@
 import { TemplatePartCustomAttributeModel } from './templatePartCustomAttributeModel';
+import { TemplatePartModelExistingType } from './templatePartModelExistingType';
 
 /**
  * Represents a child task to insert.
@@ -27,5 +28,9 @@ export interface TemplatePartModel {
     /**
      * Description to insert, if this is a new task.
      */
-    description: string
+    description: string,
+    /**
+     * How this refers to a target work item.
+     */
+    copyType: TemplatePartModelExistingType
 }
