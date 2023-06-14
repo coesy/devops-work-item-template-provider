@@ -82,8 +82,6 @@ export class AzureHttpClient {
         return newWorkItem.id.toString();
     }
 
-    
-
     /**
      * Returns a task associated with the given `workItemId`.
      * @param workItemId - ID to use when looking up a work item.
