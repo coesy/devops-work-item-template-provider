@@ -21,7 +21,7 @@ SDK.init().then(async () => {
 
     var nestedFormContent = <ConfigurationTabHandler 
         templateProvider={templateProvider} />;
-        
+    
     ReactDOM.render(
         nestedFormContent, 
         document.getElementById("root"));

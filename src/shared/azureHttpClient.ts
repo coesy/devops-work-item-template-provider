@@ -9,7 +9,6 @@ import { AzureHttpClientFields } from './azureHttpClientFields';
 export class AzureHttpClient {
     /**
      * Creates a new instance of AzureHttpClient.
-     * 
      * @param organisation - Organisation ID used in some of the REST requests.
      * @param project - Project ID used in some of the REST requests.
      * @param workItemClient - Underlying work item client used to issue REST requests to Azure.
