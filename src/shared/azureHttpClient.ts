@@ -1,5 +1,7 @@
 import { WorkItemTrackingRestClient } from 'azure-devops-extension-api/WorkItemTracking/WorkItemTrackingClient';
 import { TemplatePartModel } from './templatePartModel';
+import { WorkItem } from 'azure-devops-extension-api/WorkItemTracking/WorkItemTracking';
+import { AzureHttpClientFields } from './azureHttpClientFields';
 
 /**
  * A client to be used when communicating with Azure REST APIs.
@@ -29,26 +31,31 @@ export class AzureHttpClient {
         // POST https://dev.azure.com/{organization}/{project}/_apis/wit/workitems/${type}?api-version=7.0
         // https://learn.microsoft.com/en-us/rest/api/azure/devops/wit/work-items/create?view=azure-devops-rest-7.0&tabs=HTTP
         
-        var parent = await this.workItemClient.getWorkItem(
-            existingTaskId,
-            this.project, 
-            ['System.AreaPath', 'System.IterationPath']);
+        var parent = await this.GetTask(existingTaskId);
+
+        if (parent === undefined)
+            throw new Error('Undefined parent, unable to create a task');
         
-        var newWorkItem = await this.workItemClient.createWorkItem([
+        var workItemContent = [
             {
               'op': 'add',
-              'path': '/fields/System.Title',
+              'path': `/fields/${AzureHttpClientFields.Title}`,
               'value': templatePartModel.title
             },
             {
                 'op': 'add',
-                'path': '/fields/System.AreaPath',
-                'value': parent.fields['System.AreaPath']
+                'path': `/fields/${AzureHttpClientFields.AreaPath}`,
+                'value': parent.fields[AzureHttpClientFields.AreaPath]
             },
             {
                 'op': 'add',
-                'path': '/fields/System.IterationPath',
-                'value': parent.fields['System.IterationPath']
+                'path': `/fields/${AzureHttpClientFields.IterationPath}`,
+                'value': parent.fields[AzureHttpClientFields.IterationPath]
+            },
+            {
+                'op': 'add',
+                'path': `/fields/${AzureHttpClientFields.Description}`,
+                'value': templatePartModel.description
             },
             {
                 'op': 'add',
@@ -58,9 +65,44 @@ export class AzureHttpClient {
                     'url': parent.url
                 }
             }
-          ], this.project, 'Task', false, false, false);
+        ];
+
+        var attributeMap = templatePartModel.attributes.map(x => {
+            return {
+                'op': 'add',
+                'path': `/fields/${x.key}`,
+                'value': x.value
+            };
+        });
+
+        attributeMap.forEach(x => workItemContent.push(x));
+
+        var newWorkItem = await this.workItemClient.createWorkItem(workItemContent, this.project, 'Task', false, false, false);
 
         return newWorkItem.id.toString();
+    }
+
+    
+
+    /**
+     * Returns a task associated with the given `workItemId`.
+     * @param workItemId - ID to use when looking up a work item.
+     */
+    public async GetTask(workItemId: number): Promise<WorkItem|undefined> {
+
+        try
+        {
+            return await this.workItemClient.getWorkItem(
+                workItemId,
+                this.project,
+                [AzureHttpClientFields.AreaPath, AzureHttpClientFields.IterationPath, AzureHttpClientFields.Title, AzureHttpClientFields.Effort, AzureHttpClientFields.Description]
+            );
+        }
+        catch (error)
+        {
+            console.log(error);
+            return undefined;
+        }
     }
 
     /**

@@ -33,19 +33,16 @@ export class WorkItemFormContent extends React.Component<{templates: TemplateMod
         return (
             <div>
                 <div className="flex-row">
-                    <label>CodeBoost Work Item Template</label>
+                    <label>CodeBoost Template:</label>
                 </div>
-                <div className="flex-row">
-                    <label>Choose Template:</label>
-                </div>
-                <div className="flex-stretch">
+                <div className="flex-stretch margin-top-4">
                     <Dropdown<TemplateModel> 
                         className="dropDown"
                         items={this.props.templates.map(template => {
                             return { text: template.templateName, data: template, id: template.templateName };})} 
                         onSelect={(sender, args) => this.dropdownChange(sender, args)} />
                 </div>
-                <div className="flex-stretch">
+                <div className="flex-stretch margin-top-4">
                     <Button text="Insert Template" onClick={() => this.insertTemplateOnClick()}></Button>
                 </div>
             </div>

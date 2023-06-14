@@ -6,6 +6,7 @@ import { TemplateModel } from "../../shared/templateModel";
 import { TemplatePartModel } from "../../shared/templatePartModel";
 import { Button } from "azure-devops-ui/Button";
 import { TemplateItemEditorReadOnlyChildState } from "./templateItemEditorReadOnlyChildState";
+import { TemplatePartModelExistingType } from '../../shared/templatePartModelExistingType';
 
 /**
  * React UI handles a readonly `TemplatePartModel` instance.
@@ -32,6 +33,7 @@ export class TemplateItemEditorReadOnlyChild extends React.Component< { template
 
         this.reverseExpandedState = this.reverseExpandedState.bind(this);
         this.deleteClick = this.deleteClick.bind(this);
+        this.getCopyType = this.getCopyType.bind(this);
         this.key = props.templatePartModel.id;
     }
 
@@ -43,7 +45,7 @@ export class TemplateItemEditorReadOnlyChild extends React.Component< { template
         var reactDom = (
             <div className="flex-stretch margin-top-8 margin-bottom-8 padding-16 depth-8 depth-8">
                 <div className="flex-grow">
-                    <span className="font-weight-heavy" onClick={this.reverseExpandedState}>{this.props.templatePartModel.isExisting ? this.props.templatePartModel.workItemNumber : this.props.templatePartModel.title}</span>
+                    <span className="font-weight-heavy" onClick={this.reverseExpandedState}>{this.props.templatePartModel.isExisting ? this.props.templatePartModel.workItemNumber : 'New'} - {this.props.templatePartModel.title}</span>
                 </div>
 
                 {
@@ -56,17 +58,25 @@ export class TemplateItemEditorReadOnlyChild extends React.Component< { template
                         <div className="flex-row margin-top-8" style={{display: this.state.expanded ? 'block' : 'none'}}>
                             <span className="font-weight-medium">{this.props.templatePartModel.workItemNumber}</span>
                         </div>
+                        <div className="flex-row margin-top-16" style={{display: this.state.expanded ? 'block' : 'none'}}>
+                            <span className="font-weight-light">Reference Type</span>
+                        </div>
+                        <div className="flex-row margin-top-8" style={{display: this.state.expanded ? 'block' : 'none'}}>
+                            <span className="font-weight-medium>">{this.getCopyType()}</span>
+                        </div>
                     </>
                     :
                     <>
-                        <div className="flex-row margin-top-16" style={{display: this.state.expanded ? 'block' : 'none'}}>
-                            <span className="font-weight-light">Description</span>
-                        </div>  
-                        <div className="flex-row margin-top-8" style={{display: this.state.expanded ? 'block' : 'none'}}>
-                            <span className="font-weight-medium">{this.props.templatePartModel.description}</span>
-                        </div>
+                        
                     </>
                 }
+
+                <div className="flex-row margin-top-16" style={{display: this.state.expanded ? 'block' : 'none'}}>
+                    <span className="font-weight-light">Description</span>
+                </div>  
+                <div className="flex-row margin-top-8" style={{display: this.state.expanded ? 'block' : 'none'}}>
+                    <span className="font-weight-medium">{this.props.templatePartModel.description}</span>
+                </div>
 
                 <div className="flex-row margin-top-16" style={{display: this.state.expanded ? 'block' : 'none'}}>
                     <Button onClick={this.deleteClick}>Delete</Button>
@@ -98,4 +108,16 @@ export class TemplateItemEditorReadOnlyChild extends React.Component< { template
         this.setState({expanded: false});
         this.props.templateModel.notify(model, 'Removing Child', true);
     }
+
+    private getCopyType(): string {
+        switch (this.props.templatePartModel.copyType) {
+            case TemplatePartModelExistingType.Copy: 
+                return "Insert task as a copy";
+            case TemplatePartModelExistingType.Link:
+                return "Insert task as a link";
+        }
+
+        return "";
+    }
+
 }
