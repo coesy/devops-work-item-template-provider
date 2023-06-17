@@ -1,0 +1,63 @@
+@import "../../../node_modules/azure-devops-ui/Core/platformCommon";
+
+.topLevelMenuButton {
+    width:100%;
+    margin:0px;
+    padding:0px;
+    height:100%;
+} 
+
+.active {
+    font-weight: bold;
+}
+
+.topLevelContainer {
+    padding: 0px !important; 
+}
+
+.topLevelMenuContainer {
+    border-right: solid 1px gray;
+}
+
+.configurationPage {
+    background-color: $neutral-alpha-8;
+    width:100%;
+    height: 100%;
+}
+
+.dropDown {
+    margin: 8px;
+}
+
+.buttonPadding {
+    margin-left:4px !important;
+    margin-right:4px !important;
+}
+
+body {
+    background-color: transparent;
+}
+
+.dropDown input {
+    color: inherit;
+}
+
+.spinningBlocker {
+    display: none;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    background-color: $neutral-alpha-80;
+}
+
+.spinningBlockerShow {
+    display: block !important;
+}
+
+.collapseWrapper {
+    padding: 8px;    
+}
+
+.collapseWrapper > span {
+    float: right;
+}

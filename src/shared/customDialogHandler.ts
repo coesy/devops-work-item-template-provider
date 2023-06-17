@@ -5,6 +5,7 @@ import { Observable } from 'azure-devops-ui/Core/Observable';
 import { TemplateModel } from './templateModel';
 import { TemplatePartModel } from './templatePartModel';
 import { ConfigurationDialogConfiguration } from '../modules/configurationDialog/configurationDialogConfiguration';
+import { TemplateDialogConfiguration } from '../modules/templateDialog/templateDialogConfiguration';
 
 /**
  * A handler which can be used to load dialogs.
@@ -51,5 +52,18 @@ export class CustomDialogHandler {
         };
 
         this.hostPageLayoutService.openCustomDialog(SDK.getExtensionContext().id + '.workItemTaskSelector', dialogOptions);
+    }
+
+    /**
+     * Shows the template dialoage for template selection.
+     */
+    public showTemplateDialog(): void {
+        var dialogOptions: IDialogOptions<TemplateDialogConfiguration> = {};
+        dialogOptions.title = 'CodeBoost Template Dialog';
+        dialogOptions.lightDismiss = true;
+        dialogOptions.configuration = {};
+
+        this.hostPageLayoutService
+            .openCustomDialog(SDK.getExtensionContext().id + '.templateDialog', dialogOptions);
     }
 }
