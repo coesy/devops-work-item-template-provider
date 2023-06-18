@@ -16,8 +16,7 @@ SDK.init().then(async () => {
 
     var templateProvider = new TemplateProvider(dataManager);
     
-    var nestedFormContent = <TempContents
-         templateProvider={templateProvider} />;
+    var nestedFormContent = <TempContents templateProvider={templateProvider} />;
 
     ReactDOM.render(
         nestedFormContent,
