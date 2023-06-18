@@ -13,7 +13,7 @@
             "properties": {
                 "text": "CodeBoost - Templates",
                 "title": "Add Child Items from a custom template",
-                "icon": "computer-repair-icon.png",
+                "icon": "images/logo.png",
                 "uri": "dist/templateActionMenu/templateActionMenu.html"
             }
         }

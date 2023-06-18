@@ -13,7 +13,7 @@
             "properties": {
                 "text": "CodeBoost - Configuration",
                 "title": "Configure CodeBoost",
-                "icon": "computer-repair-icon.png",
+                "icon": "images/logo.png",
                 "uri": "dist/configureActionMenu/configureActionMenu.html"
             }
         }
