@@ -7,13 +7,14 @@ import { SelectTemplateContainerState } from "./selectTemplateContainerState";
 import { Dropdown } from "azure-devops-ui/Dropdown";
 import { Observable, ObservableValue } from "azure-devops-ui/Core/Observable";
 import { IListBoxItem } from "azure-devops-ui/ListBox";
+import { TemplateItemViewer } from "./templateItemViewer";
 
 export class SelectTemplateContainer extends React.Component<{ templateProvider: TemplateProvider }, SelectTemplateContainerState> {
 
-    private templateModelObserverable : Observable<TemplateModel> 
-    = new ObservableValue<TemplateModel>(new ModelGenerator().defaultTemplateModel());
-    
-    constructor(props: {templates:TemplateModel[], templateProvider: TemplateProvider}){
+    private templateModelObserverable: Observable<TemplateModel>
+        = new ObservableValue<TemplateModel>(new ModelGenerator().defaultTemplateModel());
+
+    constructor(props: { templates: TemplateModel[], templateProvider: TemplateProvider }) {
         super(props);
         this.state = {
             selectedTemplate: new ModelGenerator().defaultTemplateModel(),
@@ -33,7 +34,9 @@ export class SelectTemplateContainer extends React.Component<{ templateProvider:
 
         return (
             <div>
-                Temporary Contents
+                <div className="flex-row">
+                    <label>Select CodeBoost Template:</label>
+                </div>
                 <div className="flex-stretch">
                     <Dropdown
                         className="dropDown"
@@ -42,6 +45,10 @@ export class SelectTemplateContainer extends React.Component<{ templateProvider:
                         items={state.dropDownItems}
                         onSelect={this.onTemplateChange} />
                 </div>
+                <div className="separator-line-top margin-top-16 margin-bottom-8"></div>                
+                <div className="flex-stretch">
+                    <TemplateItemViewer templateModel={this.templateModelObserverable} />
+                </div>
             </div>
         );
     }
@@ -49,22 +56,22 @@ export class SelectTemplateContainer extends React.Component<{ templateProvider:
     /**
      * Reads all templates from the SDK then loads them into state.
      */
-    private async loadTemplatesFromStore(): Promise<void>  {
+    private async loadTemplatesFromStore(): Promise<void> {
         var templates = await this.props.templateProvider.GetTemplates();
-        templates = templates.sort((n1,n2) => {
+        templates = templates.sort((n1, n2) => {
             if (n1.templateName > n2.templateName) {
                 return 1;
             }
-        
+
             if (n1.templateName < n2.templateName) {
                 return -1;
             }
-        
+
             return 0;
         });
         this.setState({
             templates: templates,
-            dropDownItems: templates.map(template => { return {id: template.id!, text: template.templateName};})
+            dropDownItems: templates.map(template => { return { id: template.id!, text: template.templateName }; })
         });
     }
 
@@ -74,11 +81,10 @@ export class SelectTemplateContainer extends React.Component<{ templateProvider:
      */
     private loadTemplate(templateId: string): void {
         var templateModels = this.state.templates.filter(x => x.id == templateId);
-        if (templateModels.length !== 1)
-        {
+        if (templateModels.length !== 1) {
             return;
         }
-        
+
         this.templateModelObserverable.notify(templateModels[0], 'Initial', true);
 
         // this.setState({
