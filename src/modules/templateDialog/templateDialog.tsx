@@ -2,7 +2,7 @@ import "es6-promise/auto";
 import * as SDK from 'azure-devops-extension-sdk';
 import { CommonServiceIds, IExtensionDataService } from "azure-devops-extension-api";
 import { TemplateProvider } from "../../shared/templateprovider";
-import { TempContents } from "./tempContents";
+import { SelectTemplateContainer } from "./selectTemplateContainer";
 import React from "react";
 import ReactDOM from "react-dom";
 
@@ -16,7 +16,7 @@ SDK.init().then(async () => {
 
     var templateProvider = new TemplateProvider(dataManager);
     
-    var nestedFormContent = <TempContents templateProvider={templateProvider} />;
+    var nestedFormContent = <SelectTemplateContainer templateProvider={templateProvider} />;
 
     ReactDOM.render(
         nestedFormContent,
