@@ -6,6 +6,7 @@ import { TemplateModel } from './templateModel';
 import { TemplatePartModel } from './templatePartModel';
 import { ConfigurationDialogConfiguration } from '../modules/configurationDialog/configurationDialogConfiguration';
 import { TemplateDialogConfiguration } from '../modules/templateDialog/templateDialogConfiguration';
+import { IWorkItemLoadedArgs } from 'azure-devops-extension-api/WorkItemTracking/WorkItemTrackingServices';
 
 /**
  * A handler which can be used to load dialogs.
@@ -62,7 +63,7 @@ export class CustomDialogHandler {
         dialogOptions.title = 'CodeBoost Template Dialog';
         dialogOptions.lightDismiss = true;
         dialogOptions.configuration = {};
-
+        
         this.hostPageLayoutService
             .openCustomDialog(SDK.getExtensionContext().id + '.templateDialog', dialogOptions);
     }

@@ -29,13 +29,21 @@ export class TemplateItemViewer extends React.Component<{ templateModel: Observa
                     <span className="font-weight-light">Template Name</span>
                 </div>
                 <div className="flex-stretch">
-                    <TextField value={this.state.templateModel.templateName} readOnly={true} />
+                    <span>{this.state.templateModel.templateName}</span>
                 </div>
                 <div className="flex-row margin-top-4">
                     <span className="font-weight-light">Description</span>
                 </div>
                 <div className="flex-stretch">
-                    <TextField value={this.state.templateModel.description} readOnly={true} multiline={true} />
+                    <span>{this.state.templateModel.description}</span>
+                </div>
+                <div className="flex-row margin-top-4">
+                    <span className="font-weight-light">Child Tasks</span>
+                </div>
+                <div className="flex-stretch">
+                    <ul>
+                        {this.state.templateModel.children.map(child => <li key={child.title}> {child.title}</li>)}
+                    </ul>
                 </div>
             </div>
         );
