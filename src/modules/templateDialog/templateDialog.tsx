@@ -1,6 +1,6 @@
 import "es6-promise/auto";
 import * as SDK from 'azure-devops-extension-sdk';
-import { CommonServiceIds, IExtensionDataService, IProjectPageService, getClient } from "azure-devops-extension-api";
+import { CommonServiceIds, IDialogOptions, IExtensionDataService, IProjectPageService, getClient } from "azure-devops-extension-api";
 import { TemplateProvider } from "../../shared/templateprovider";
 import { SelectTemplateContainer } from "./selectTemplateContainer";
 import React from "react";
@@ -8,8 +8,15 @@ import ReactDOM from "react-dom";
 import { TemplateLoadingProcessor } from "../../shared/templateLoadingProcessor";
 import { WorkItemTrackingRestClient } from "azure-devops-extension-api/WorkItemTracking/WorkItemTrackingClient";
 import { AzureHttpClient } from "../../shared/azureHttpClient";
+import { TemplateDialogConfiguration } from "./templateDialogConfiguration";
+import { IWorkItemLoadedArgs } from "azure-devops-extension-api/WorkItemTracking/WorkItemTrackingServices";
 
 SDK.init().then(async () => {
+    
+    var configuration = await SDK.getConfiguration();
+    var casted = configuration as TemplateDialogConfiguration;
+    var ids = casted.workItemLoadedArgs.id;
+    console.log(ids);
     
     var projectService = await SDK.getService<IProjectPageService>(CommonServiceIds.ProjectPageService);
     var project = await projectService.getProject();
@@ -32,14 +39,14 @@ SDK.init().then(async () => {
     const templateLoadingProcessor = new TemplateLoadingProcessor(
         httpClient,
         templateProvider,
-        1
+        ids
     );
-    
+
     var nestedFormContent = <SelectTemplateContainer templateProvider={templateProvider} templateLoadingProcessor={templateLoadingProcessor} />;
 
     ReactDOM.render(
         nestedFormContent,
-        document.getElementById("root")    
+        document.getElementById("root")
     );
 
     await SDK.notifyLoadSucceeded();

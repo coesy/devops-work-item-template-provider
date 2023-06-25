@@ -11,14 +11,12 @@ import { IWorkItemLoadedArgs } from "azure-devops-extension-api/WorkItemTracking
 var templateActionMenuProvider = () => {
     return {
         execute: async function(workItemLoadedArgs: IWorkItemLoadedArgs) {
-            debugger;
-            // Configure action menu
-            var test = workItemLoadedArgs.id;
+            
             var hostPageLayoutService = await SDK.getService<IHostPageLayoutService>(CommonServiceIds.HostPageLayoutService);
             var hostNavigationService = await SDK.getService<IHostNavigationService>(CommonServiceIds.HostNavigationService);
 
             new CustomDialogHandler(hostPageLayoutService, hostNavigationService)
-                .showTemplateDialog();
+                .showTemplateDialog(workItemLoadedArgs);
         }
     };
 };

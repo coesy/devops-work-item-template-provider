@@ -58,11 +58,11 @@ export class CustomDialogHandler {
     /**
      * Shows the template dialoage for template selection.
      */
-    public showTemplateDialog(): void {
+    public showTemplateDialog(workItemLoadedArgs: IWorkItemLoadedArgs): void {
         var dialogOptions: IDialogOptions<TemplateDialogConfiguration> = {};
         dialogOptions.title = 'CodeBoost Template Dialog';
         dialogOptions.lightDismiss = true;
-        dialogOptions.configuration = {};
+        dialogOptions.configuration = new TemplateDialogConfiguration(workItemLoadedArgs);
         
         this.hostPageLayoutService
             .openCustomDialog(SDK.getExtensionContext().id + '.templateDialog', dialogOptions);
