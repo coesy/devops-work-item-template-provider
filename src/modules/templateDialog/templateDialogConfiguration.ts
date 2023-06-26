@@ -1,12 +1,9 @@
-import { IWorkItemLoadedArgs } from "azure-devops-extension-api/WorkItemTracking/WorkItemTrackingServices";
+import { OnloadActionMenuArguments } from "../../shared/onloadActionMenuArguments";
 
 /** 
  * Configuration for 'Template Dialog'.
  */
-export class TemplateDialogConfiguration {
-    workItemLoadedArgs: IWorkItemLoadedArgs;
-
-    constructor(workItemLoadedArgs: IWorkItemLoadedArgs) {
-        this.workItemLoadedArgs = workItemLoadedArgs;
-    }
+export interface TemplateDialogConfiguration {
+    workItemDetails: OnloadActionMenuArguments
 }
+

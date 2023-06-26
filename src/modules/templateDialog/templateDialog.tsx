@@ -12,10 +12,9 @@ import { TemplateDialogConfiguration } from "./templateDialogConfiguration";
 import { IWorkItemLoadedArgs } from "azure-devops-extension-api/WorkItemTracking/WorkItemTrackingServices";
 
 SDK.init().then(async () => {
-    
-    var configuration = await SDK.getConfiguration();
-    var casted = configuration as TemplateDialogConfiguration;
-    var ids = casted.workItemLoadedArgs.id;
+debugger;
+    var configuration = await SDK.getConfiguration() as TemplateDialogConfiguration;
+    var ids = configuration.workItemDetails.workItemId;
     console.log(ids);
     
     var projectService = await SDK.getService<IProjectPageService>(CommonServiceIds.ProjectPageService);
