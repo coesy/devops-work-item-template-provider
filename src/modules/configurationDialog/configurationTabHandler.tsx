@@ -35,7 +35,7 @@ export class ConfigurationTabHandler extends React.Component<{ templateProvider:
      */
     public render(): JSX.Element {
         return (
-            <div className="flex-column" style={{ height: '800px' }} onLoad={() => { }}>
+            <div className="flex-column" style={{ height: '800px' }}>
                 <TabBar
                     onSelectedTabChanged={this.onSelectedTabChanged}
                     selectedTabId={this.state.selectedTabId}
@@ -51,6 +51,13 @@ export class ConfigurationTabHandler extends React.Component<{ templateProvider:
                 <div className="tabRoot" style={{ overflow: 'scroll' }}></div>
             </div>
         );
+    }
+
+    /**
+     * An onload event invoked from React once `render()` completes.
+     */
+    public componentDidMount(): void {
+        $('[data-content="Edit Template"]').click();
     }
 
     /**
