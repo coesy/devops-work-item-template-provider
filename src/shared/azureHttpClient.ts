@@ -1,7 +1,8 @@
-import { WorkItemTrackingRestClient } from 'azure-devops-extension-api/WorkItemTracking/WorkItemTrackingClient';
 import { TemplatePartModel } from './templatePartModel';
 import { WorkItem } from 'azure-devops-extension-api/WorkItemTracking/WorkItemTracking';
 import { AzureHttpClientFields } from './azureHttpClientFields';
+import { IWorkItemTrackingRestClientProxy } from '../proxies';
+import { WorkItemTrackingRestClient } from 'azure-devops-extension-api/WorkItemTracking/WorkItemTrackingClient';
 
 /**
  * A client to be used when communicating with Azure REST APIs.
@@ -17,7 +18,8 @@ export class AzureHttpClient {
         private organisation: string,
         private project: string,
         private workItemClient: WorkItemTrackingRestClient) {
-
+            console.log('Is Undefined: ' + (workItemClient === undefined));
+            console.log('Is Undefined: ' + (workItemClient.getWorkItem === undefined));
     }
 
     /**
@@ -75,7 +77,7 @@ export class AzureHttpClient {
         });
 
         attributeMap.forEach(x => workItemContent.push(x));
-
+debugger;
         var newWorkItem = await this.workItemClient.createWorkItem(workItemContent, this.project, 'Task', false, false, false);
 
         return newWorkItem.id.toString();

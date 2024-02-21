@@ -1,5 +1,5 @@
 import { TemplateModel } from './templateModel';
-import { OptionsProvider } from './OptionsProvider';
+import { OptionsProvider } from './optionsProvider';
 import { IExtensionDataManager } from 'azure-devops-extension-api/Common/CommonServices';
 
 /**

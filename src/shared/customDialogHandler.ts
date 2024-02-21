@@ -1,5 +1,4 @@
 import { IDialogOptions, IHostNavigationService, IHostPageLayoutService } from 'azure-devops-extension-api';
-import * as SDK from 'azure-devops-extension-sdk/SDK';
 import { WorkItemTaskSelectorConfiguration } from '../modules/workItemTaskSelector/workItemTaskSelectorConfiguration';
 import { Observable } from 'azure-devops-ui/Core/Observable';
 import { TemplateModel } from './templateModel';
@@ -8,6 +7,7 @@ import { ConfigurationDialogConfiguration } from '../modules/configurationDialog
 import { TemplateDialogConfiguration } from '../modules/templateDialog/templateDialogConfiguration';
 import { IWorkItemLoadedArgs } from 'azure-devops-extension-api/WorkItemTracking/WorkItemTrackingServices';
 import { OnloadActionMenuArguments } from './onloadActionMenuArguments';
+import { ISdkProxy } from '../proxies';
 
 /**
  * A handler which can be used to load dialogs.
@@ -15,7 +15,8 @@ import { OnloadActionMenuArguments } from './onloadActionMenuArguments';
 export class CustomDialogHandler {
     constructor (
         private hostPageLayoutService: IHostPageLayoutService,
-        private hostNavigationService: IHostNavigationService) {
+        private sdk: ISdkProxy/*,
+        private hostNavigationService: IHostNavigationService*/) {
         
     }
 
@@ -29,7 +30,7 @@ export class CustomDialogHandler {
         dialogOptions.configuration = {};
 
         this.hostPageLayoutService
-            .openCustomDialog(SDK.getExtensionContext().id + '.configurationDialog', dialogOptions);
+            .openCustomDialog(this.sdk.getExtensionContext().id + '.configurationDialog', dialogOptions);
     }
 
     /**
@@ -38,7 +39,7 @@ export class CustomDialogHandler {
      * @param instance - Seed instance of `templateModel`.
      */
     public showWorkItemSelector(templateModel: Observable<TemplateModel>, instance: TemplateModel): void {
-        var dialogOptions :IDialogOptions<TemplatePartModel> = {};
+        var dialogOptions: IDialogOptions<TemplatePartModel> = {};
         dialogOptions.title = 'Work Item Selector';
         dialogOptions.lightDismiss = true;
         dialogOptions.configuration = {};
@@ -53,7 +54,7 @@ export class CustomDialogHandler {
             templateModel.notify(instance, 'Update Children', true);
         };
 
-        this.hostPageLayoutService.openCustomDialog(SDK.getExtensionContext().id + '.workItemTaskSelector', dialogOptions);
+        this.hostPageLayoutService.openCustomDialog(this.sdk.getExtensionContext().id + '.workItemTaskSelector', dialogOptions);
     }
 
     /**
@@ -69,6 +70,6 @@ export class CustomDialogHandler {
         };
         
         this.hostPageLayoutService
-            .openCustomDialog(SDK.getExtensionContext().id + '.templateDialog', dialogOptions);
+            .openCustomDialog(this.sdk.getExtensionContext().id + '.templateDialog', dialogOptions);
     }
 }
